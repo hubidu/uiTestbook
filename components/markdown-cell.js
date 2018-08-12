@@ -1,21 +1,21 @@
 import React from 'react'
 
-export default class MarkdownStep extends React.Component {
+export default class MarkdownCell extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <div className={`MarkdownStep ${this.props.isSelected && 'MarkdownStep--selected'}`}>
+      <div className={`MarkdownCell ${this.props.isSelected ? 'bShadow-11' : undefined}`}>
         
 
-        {this.props.step.content}
+        {this.props.cell.content}
         <style jsx>{`
-          .MarkdownStep {
+          .MarkdownCell {
             margin: 5px 2px;
           }
-          .MarkdownStep--selected {
+          .MarkdownCell--selected {
             border-left: 2px solid blue;
           }
         `}</style>        

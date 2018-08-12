@@ -29,7 +29,7 @@ const runCodeceptjsCell = async (events, cell) => {
       })
     })
 
-    await evalCodeceptjsCell(ctx, cell)
+    const result = await evalCodeceptjsCell(ctx, cell)
 
     const screenshot = await ctx.I.page.screenshot()
 
@@ -39,6 +39,7 @@ const runCodeceptjsCell = async (events, cell) => {
         state: 'execution-successful',
         executedAt: Date.now(),
         screenshot,
+        result,
         error: undefined
       })
     })

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import MarkdownStep from './markdown-step'
-import CodeceptjsStep from './codeceptjs-step'
+import MarkdownStep from './markdown-cell'
+import CodeceptjsStep from './codeceptjs-cell'
 
 import runSteps from '../services/run-steps'
 
@@ -14,7 +14,14 @@ export default class StepEditor extends React.Component {
   }
 
   handleRunAllClick = async () => {
-    await runSteps(this.state.document.cells)
+    const document = this.state.document
+    document.cells.forEach(cell => {
+      cell.state = undefined
+      cell.error = undefined
+    })
+    this.setState({document})
+
+    await runSteps(document.cells)
   }
 
   handleRunSelectedClick = async () => {
@@ -29,14 +36,22 @@ export default class StepEditor extends React.Component {
     })
   }
 
+  handleCellContentChange = (cell, newContent) => {
+    const document = this.state.document
+    const updatedCell = document.cells.find(c => c.id === cell.id)
+    updatedCell.content = newContent
+
+    this.setState({document})
+  }
+
   isSelected = (cell) => {
     return cell.id === this.state.selectedCell
   }
 
   renderCell = (cell, isSelected) => {
     switch (cell.type) {
-      case 'markdown': return <MarkdownStep step={cell} isSelected={isSelected} />
-      case 'codeceptjs': return <CodeceptjsStep cell={cell} isSelected={isSelected} />
+      case 'markdown': return <MarkdownStep cell={cell} isSelected={isSelected} />
+      case 'codeceptjs': return <CodeceptjsStep cell={cell} isSelected={isSelected} onCellContentChange={this.handleCellContentChange} />
     }
   }
 

@@ -87,7 +87,7 @@ export default class IndexPage extends React.Component {
           <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 
           <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css' />
-  
+          <link rel='stylesheet' href='https://madeas.github.io/box-shadows.min.css' />
         </Head>
 
         <header>
@@ -114,6 +114,10 @@ export default class IndexPage extends React.Component {
           margin: 0;
         }
 
+        body {
+          overflow:hidden;
+        }
+
         header {
           position: absolute;
           background: white;
@@ -122,9 +126,9 @@ export default class IndexPage extends React.Component {
         }
 
         #screenshot {
-          max-width: 100%;
-          max-height: 90vh;
-          margin: auto;
+          // max-width: 100%;
+          // max-height: 90vh;
+          // margin: auto;
         }
 
         .content {
@@ -163,6 +167,8 @@ export default class IndexPage extends React.Component {
          -moz-box-flex: 1;
          -ms-box-flex: 1;
           box-flex: 1;
+          overflow-y: scroll;
+
         }
 
         `}</style>
