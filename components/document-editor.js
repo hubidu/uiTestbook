@@ -5,6 +5,26 @@ import CodeceptjsStep from './codeceptjs-cell'
 
 import runSteps from '../services/run-steps'
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+const resetCells = (document, fromIndex = 0, resetUrl = true) => {
+  const includedCells = document.cells.slice(fromIndex, document.cells.length)
+  for (let cell of includedCells) {
+    cell.state = 'initial'
+    cell.screenshot = undefined
+    cell.error = undefined
+    if (resetUrl) cell.url = undefined
+  }
+  return document
+}
+
 export default class StepEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -14,26 +34,51 @@ export default class StepEditor extends React.Component {
   }
 
   handleRunAllClick = async () => {
-    const document = this.state.document
-    document.cells.forEach(cell => {
-      cell.state = undefined
-      cell.error = undefined
-    })
+    const document = resetCells(this.state.document)
+    this.setState({document})
+    await runSteps(document.cells)
+  }
+
+  handleRunToSelectedClick = async () => {
+    const document = resetCells(this.state.document)
     this.setState({document})
 
-    await runSteps(document.cells)
+    await runSteps(document.cells.slice(0, this.state.selectedCell))
   }
 
   handleRunSelectedClick = async () => {
     if (!this.state.selectedCell) return
+    
+    const cellIdx = this.state.document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+    const document = resetCells(this.state.document, cellIdx, false)
+    this.setState({document})
 
-    await runSteps(this.state.document.cells.filter(cell => cell.id === this.state.selectedCell))
+    await runSteps([this.state.document.cells[cellIdx]])
+  }
+
+  handleAddCellClick = () => {
+    const document = this.state.document
+    document.cells.push({ id: guid(), type: 'codeceptjs', content: '' })
+    this.setState({document})
+  }
+
+  handleDeleteCellClick = () => {
+    if (!this.state.selectedCell) return
+    const document = this.state.document
+    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+    document.cells.splice(idx, 1)
+    this.setState({document})
+
   }
 
   handleCellClick = (cell) => {
     this.setState({
       selectedCell: cell.id
     })
+
+    if (this.props.onCellSelectionChange) {
+      this.props.onCellSelectionChange(cell)
+    }
   }
 
   handleCellContentChange = (cell, newContent) => {
@@ -57,13 +102,22 @@ export default class StepEditor extends React.Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="DocumentEditor">
+        <div className="DocumentEditor-actions">
           <button className="button is-small" onClick={e => this.handleRunAllClick()}>
             Run All
           </button>
           <button className="button is-small" onClick={e => this.handleRunSelectedClick()}>
             Run Selected
+          </button>
+          <button className="button is-small" onClick={e => this.handleRunToSelectedClick()}>
+            Run to Selected
+          </button>
+          <button className="button is-small is-primary" onClick={e => this.handleAddCellClick()}>
+            Add Cell
+          </button>
+          <button className="button is-small is-danger" onClick={e => this.handleDeleteCellClick()}>
+            Delete Cell
           </button>
         </div>
       {
@@ -75,7 +129,9 @@ export default class StepEditor extends React.Component {
       }    
       
       <style jsx>{`
-
+        .DocumentEditor-actions button {
+          margin-left: 0.25em;
+        }
       `}</style>
     </div>
     )

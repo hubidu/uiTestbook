@@ -49,10 +49,10 @@ export default class IndexPage extends React.Component {
     this.props.socket.off('message', this.handleMessage)
   }
 
-  updateScreenshot = (message) => {
-    if (!message.cell.screenshot) return
+  updateScreenshot = (screenshot) => {
+    if (!screenshot) return
     
-    const arrayBufferView = new Uint8Array( message.cell.screenshot );
+    const arrayBufferView = new Uint8Array(screenshot);
     const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
     const urlCreator = window.URL || window.webkitURL;
     const imageUrl = urlCreator.createObjectURL( blob );
@@ -68,7 +68,7 @@ export default class IndexPage extends React.Component {
       document
     })
 
-    this.updateScreenshot(message)
+    this.updateScreenshot(message.cell.screenshot)
   }
 
   // add messages from server to the state
@@ -76,6 +76,10 @@ export default class IndexPage extends React.Component {
     console.log('message', message)
 
     this.updateCell(message)
+  }
+
+  handleCellSelectionChange = selectedCell => {
+    this.updateScreenshot(selectedCell.screenshot)
   }
 
   render () {
@@ -97,7 +101,7 @@ export default class IndexPage extends React.Component {
         
         <div className="content">
           <div className="code">
-            <DocumentEditor document={this.props.document} />
+            <DocumentEditor document={this.props.document} onCellSelectionChange={this.handleCellSelectionChange} />
           </div>
 
           <div className="browser">

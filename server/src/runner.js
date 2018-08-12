@@ -20,12 +20,18 @@ const runCodeceptjsCell = async (events, cell) => {
   try {
     console.log('Executing cell', cell)
 
+    if (cell.url) {
+      await ctx.I.amOnPage(cell.url)
+    }
+    const url = await ctx.I.grabCurrentUrl()
+
     events.emit('message', {
       type: 'execution.started',
       cell: Object.assign(cell, {
         state: 'running',
         runAt: Date.now(),
-        screenshot: undefined
+        screenshot: undefined,
+        url
       })
     })
 
@@ -44,8 +50,6 @@ const runCodeceptjsCell = async (events, cell) => {
       })
     })
   } catch (err) {
-    console.log('ERROR executing cell', cell, err)
-
     const screenshot = await ctx.I.page.screenshot()
 
     events.emit('message', {
@@ -61,6 +65,8 @@ const runCodeceptjsCell = async (events, cell) => {
         }
       })
     })
+
+    throw err
   }
 }
 
@@ -76,10 +82,14 @@ const run = async (events, cells) => {
   await ctx.I._beforeSuite()
   await ctx.I._before()
 
-  for (cell of cells) {
-    if (cell.type === 'codeceptjs') {
-      await runCodeceptjsCell(events, cell)
-    }
+  try {
+    for (cell of cells) {
+      if (cell.type === 'codeceptjs') {
+        await runCodeceptjsCell(events, cell)
+      }
+    }  
+  } catch (err) {
+    console.log('ERROR executing cell', cell, err)
   }
 
   await ctx.I._after()

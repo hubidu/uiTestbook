@@ -14,11 +14,14 @@ export default class CodeceptjsCell extends React.Component {
 
   render() {
     return (
-      <div className={`CodeceptjsCell is-size-7 `}>
+      <div className={`CodeceptjsCell`}>
+        <div className="CodeceptjsCell-meta">
+          <span className="has-text-link">{this.props.cell.url}</span>
+        </div>
         <div className={`CodeceptjsCell-content CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'bShadow-11' : undefined}`}>
           {
             this.props.isSelected ?
-              <textarea className="CodeceptjsCell-contentEditable" rows={4} value={this.props.cell.content} onChange={e => this.handleCellContentChange(e.target.value)}></textarea>
+              <textarea className="CodeceptjsCell-contentEditable" rows={5} value={this.props.cell.content} onChange={e => this.handleCellContentChange(e.target.value)}></textarea>
               :
               <pre>{this.props.cell.content}</pre>
           }
@@ -42,10 +45,7 @@ export default class CodeceptjsCell extends React.Component {
         </div>
         <style jsx>{`
         .CodeceptjsCell {
-          margin: 5px 2px;
-          padding: 2px;
-          font-family: monospace;
-          background-color: #eee;
+          font-size: 0.9em;
         }
         .CodeceptjsCell--selected {
           border-left: 2px solid blue;
@@ -60,13 +60,28 @@ export default class CodeceptjsCell extends React.Component {
           border-left: 2px solid green;
         }
 
+        .CodeceptjsCell-error {
+          margin-top: 0.5em;
+        }
+
+        .CodeceptjsCell-meta {
+          font-size: 0.7em;
+        }
+
+        .CodeceptjsCell-content {
+          margin-top: 5px;
+          font-family: monospace;
+        }
+        
         .CodeceptjsCell-contentEditable {
+          background-color: #eee;
+          margin: 0;
+          padding: 0 0 0 1.5em;
           border: none;
           width: 100%;
-          padding: 2px;
           font-family: monospace;
           background-color: #eee;
-          font-size: 1em;
+          font-size: 0.9em;
         }
         `}</style>        
 
