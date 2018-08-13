@@ -86,7 +86,7 @@ export default class IndexPage extends React.Component {
     return (
       <div className="wrapper container is-fluid">
         <Head>
-          <title>My Testing Notebook</title>
+          <title>uiTestbook</title>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 
@@ -95,8 +95,8 @@ export default class IndexPage extends React.Component {
         </Head>
 
         <header>
-          <strong>iCodeceptjs </strong>
-          Notebook
+          ui
+          <strong>Testbook</strong>
         </header>
         
         <div className="content">
@@ -123,6 +123,7 @@ export default class IndexPage extends React.Component {
         }
 
         header {
+          padding: 10px;
           position: absolute;
           background: white;
           height: 30px;
