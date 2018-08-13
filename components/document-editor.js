@@ -16,11 +16,16 @@ function guid() {
 
 const resetCells = (document, fromIndex = 0, resetUrl = true) => {
   const includedCells = document.cells.slice(fromIndex, document.cells.length)
+
+  let i = 0
   for (let cell of includedCells) {
     cell.state = 'initial'
     cell.screenshot = undefined
     cell.error = undefined
-    if (resetUrl) cell.url = undefined
+    cell.result = undefined
+    if (resetUrl && i > 0) cell.url = undefined
+
+    i++
   }
   return document
 }
@@ -36,14 +41,14 @@ export default class StepEditor extends React.Component {
   handleRunAllClick = async () => {
     const document = resetCells(this.state.document)
     this.setState({document})
-    await runSteps(document.cells)
+    runSteps(document.cells)
   }
 
   handleRunToSelectedClick = async () => {
     const document = resetCells(this.state.document)
     this.setState({document})
 
-    await runSteps(document.cells.slice(0, this.state.selectedCell))
+    runSteps(document.cells.slice(0, this.state.selectedCell))
   }
 
   handleRunSelectedClick = async () => {
@@ -53,12 +58,12 @@ export default class StepEditor extends React.Component {
     const document = resetCells(this.state.document, cellIdx, false)
     this.setState({document})
 
-    await runSteps([this.state.document.cells[cellIdx]])
+    runSteps([this.state.document.cells[cellIdx]])
   }
 
   handleAddCellClick = () => {
     const document = this.state.document
-    document.cells.push({ id: guid(), type: 'codeceptjs', content: '' })
+    document.cells.push({ id: guid(), type: 'codeceptjs', state: 'initial', content: '\n I.' })
     this.setState({document})
   }
 
@@ -95,8 +100,8 @@ export default class StepEditor extends React.Component {
 
   renderCell = (cell, isSelected) => {
     switch (cell.type) {
-      case 'markdown': return <MarkdownStep cell={cell} isSelected={isSelected} />
-      case 'codeceptjs': return <CodeceptjsStep cell={cell} isSelected={isSelected} onCellContentChange={this.handleCellContentChange} />
+      case 'markdown': return <MarkdownStep cell={cell} isSelected={isSelected} onClick={e => this.handleCellClick(cell)} />
+      case 'codeceptjs': return <CodeceptjsStep cell={cell} isSelected={isSelected} onCellContentChange={this.handleCellContentChange} onClick={e => this.handleCellClick(cell)} />
     }
   }
 
@@ -122,7 +127,7 @@ export default class StepEditor extends React.Component {
         </div>
       {
         this.state.document.cells.map((cell, i) => 
-          <div key={i} onClick={e => this.handleCellClick(cell)}>
+          <div key={i}>
             {this.renderCell(cell, this.isSelected(cell))}
           </div>
         )

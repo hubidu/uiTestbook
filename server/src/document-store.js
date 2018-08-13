@@ -8,6 +8,7 @@ const getDocument = (docName) => {
     cells: [
       { 
         id: '1',
+        state: 'initial',
         type: 'markdown', 
         content: `
 # Test Notebook
@@ -17,6 +18,7 @@ Make UI testing more **FUN**
       },
       { 
         id: '2',
+        state: 'initial',
         type: 'markdown', 
         content: `
 Let's start with a simple codeceptjs test 
@@ -24,6 +26,7 @@ Let's start with a simple codeceptjs test
       },
       { 
         id: '3',
+        state: 'initial',
         type: 'codeceptjs', 
         content: `
 await I.amOnPage('http://www.google.de')
@@ -31,6 +34,7 @@ await I.amOnPage('http://www.google.de')
       },
       { 
         id: '4',
+        state: 'initial',
         type: 'codeceptjs', 
         content: `
 await I.fillField('q', 'codeceptjs')
@@ -40,6 +44,7 @@ await I.waitForNavigation()
       },
       { 
         id: '5',
+        state: 'initial',
         type: 'codeceptjs', 
         content: `
 await I.see('CodeceptJS')
@@ -47,6 +52,7 @@ await I.see('CodeceptJS')
       },
       { 
         id: '6',
+        state: 'initial',
         type: 'codeceptjs', 
         content: `
 await I.click('End-to-End Testing With CodeceptJS - Monterail')

@@ -1,3 +1,4 @@
+const got = require('got')
 const Puppeteer = require('codeceptjs/lib/helper/Puppeteer')
 const {evalCodeceptjsCell} = require('./eval-script')
 
@@ -11,8 +12,13 @@ const createContext = () => {
     windowSize: '1900x2000'
   })
   
+  const json = got.extend({
+    json: true
+  });
+
   return {
-    I: driver
+    I: driver,
+    httpGet: async url => (await json.get(url)).body
   }
 }
 
