@@ -13,9 +13,11 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "next": "^6.1.1",
+    "prismjs": "^1.15.0",
     "react": "^16.4.2",
     "react-autosize-textarea": "^4.0.0",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "react-simple-code-editor": "^0.5.0"
   },
   "devDependencies": {
     "socket.io-client": "^2.1.1"

@@ -91,7 +91,7 @@ export default class IndexPage extends React.Component {
           <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 
           <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css' />
-          <link rel='stylesheet' href='https://madeas.github.io/box-shadows.min.css' />
+          <link href="/static/prism.css" rel="stylesheet" />
         </Head>
 
         <header>
@@ -109,6 +109,16 @@ export default class IndexPage extends React.Component {
           </div>
 
         <style jsx global>{`
+        pre {
+          // Make text cursor visible in react simple code editor (because of bulma pre styles)
+          background:none !important;
+        }
+
+        textarea::focus {
+          border: none;
+        }
+
+
         html,
         body,
         #__next,
@@ -152,7 +162,7 @@ export default class IndexPage extends React.Component {
         }
 
         .code {
-          width: 33%;
+          width: 40%;
           -ms-flex: 0 100px;
           -webkit-box-flex:  0;
           -moz-box-flex:  0;

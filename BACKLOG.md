@@ -16,7 +16,10 @@
 
 # Backlog
 
+- Run from cell button
+- Distinguish between js code cell and codeceptjs cell
 - Save changed document (to file? to Google Drive)
+- Implement async expressions
 - Try: Find element by point
 - Add a margin to the last cell
 - Declare variable in one cell and use it across cells

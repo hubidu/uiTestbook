@@ -4,12 +4,15 @@ const {createScriptContext, evalCodeceptjsCell} = require('./eval-script')
 
 const createContext = () => {
   const driver = new Puppeteer({
-    show: true,
+    show: false,
     waitForTimeout: 10000,
+    getPageTimeout: 20000,
     waitForAction: 0,
     restart: false,
+    keepCookies: true,
+    keepBrowserState: true,
     fullPageScreenshots: true,
-    waitForNavigation: 'load',
+    waitForNavigation: 'networkidle0',
     windowSize: '1900x2000'
   })
   

@@ -1,7 +1,12 @@
 import React from 'react'
-import TextareaAutosize from 'react-autosize-textarea';
+// import TextareaAutosize from 'react-autosize-textarea';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 
-const trunc = (str, max = 30) => str && str.slice(0, max) + '...'
+
+const trunc = (str, max = 80) => str && str.slice(0, max) + '...'
 function syntaxHighlight(json) {
   if (typeof json != 'string') {
        json = JSON.stringify(json, undefined, 2);
@@ -44,29 +49,22 @@ export default class CodeceptjsCell extends React.Component {
 
   render() {
     return (
-      <div className={`CodeceptjsCell`} onClick={e => this.handleCellClick()}>
+      <div className={`CodeceptjsCell CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'CodeceptjsCell--selected' : ''}`} onClick={e => this.handleCellClick()}>
         <div className="CodeceptjsCell-meta">
           <a className="has-text-grey" href={this.props.cell.url} target="_blank">
             {trunc(this.props.cell.url)}
           </a>
         </div>
 
-        <div className={`CodeceptjsCell-content CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'bShadow-11' : undefined}`}>
+        <div className={`CodeceptjsCell-content`}>
           {
-            this.props.isSelected ?
-              <TextareaAutosize 
-                ref="contentEditable"
-                autoFocus="true"
-                className="CodeceptjsCell-contentEditable" 
-                rows={5} 
+              <Editor
                 value={this.props.cell.content} 
-                placeholder="Write codeceptjs code here"
-                onChange={e => this.handleCellContentChange(e.target.value)} />
-              :
-              <pre>{this.props.cell.content}</pre>
+                onValueChange={code => this.handleCellContentChange(code)}
+                highlight={code => highlight(code, languages.js)}
+              />
           }
         </div>
-        
         
         {
           this.props.cell.result && 
@@ -75,7 +73,7 @@ export default class CodeceptjsCell extends React.Component {
 
         {
           this.props.cell.error &&
-          <div className="CodeceptjsCell-error notification is-danger">
+          <div className="CodeceptjsCell-error notification is-danger is-size-7">
             {this.props.cell.error.message}
             {
               this.props.cell.error.actual &&
@@ -90,18 +88,19 @@ export default class CodeceptjsCell extends React.Component {
 
         </div>
         <style jsx global>{`
+
         .CodeceptjsCell-contentEditable {
           margin: 0;
           color: #444;
-          padding: 0 0 0 1.5em;
-          border: 1px solid #eee;
+          padding: 2px;
+          border: none;
           cursor: text;
           white-space: pre-wrap;
           width: 100%;
           font-family: monospace;
           background-color: #fafafa;
           line-height: 1.5em;
-          font-size: 0.8em;
+          font-size: 0.875em;
         }
 
         .CodeceptjsCell-contentEditable:focus {
@@ -126,9 +125,15 @@ export default class CodeceptjsCell extends React.Component {
         `}</style>   
         <style jsx>{`
         .CodeceptjsCell {
-          font-size: 0.8em;
+          padding: 5px;
+          margin-bottom: 2px;
+          background-color: #fafafa;
         }
 
+        .CodeceptjsCell--selected {
+          border: 1px solid #fafafa;
+          border-radius: 3px;
+        }
         .CodeceptjsCell--state-initial {
           border-left: 3px solid hsl(0, 0%, 48%);
         }        
@@ -147,15 +152,15 @@ export default class CodeceptjsCell extends React.Component {
         }
 
         .CodeceptjsCell-meta {
-          margin: 1em 0 0.5em 0;
           font-size: 0.7em;
         }
 
         .CodeceptjsCell-content {
-          font-family: monospace;
+          font-size: 0.8em;
         }
         
         .CodeceptjsCell-result {
+          font-size: 0.7em;
           margin-top: 3px;
           border: 1px solid #eee;
           border-radius: 3px;
