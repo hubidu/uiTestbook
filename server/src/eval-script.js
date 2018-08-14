@@ -1,18 +1,21 @@
 const util = require('util');
 const vm = require('vm');
 
-const evalCodeceptjsCell = (ctx, cell) => {
-  const script = new vm.Script(`(async() => {
-    ${cell.content}
-  })();`);
-  
-  const scriptContext = vm.createContext(ctx);
- 
-  const res = script.runInContext(scriptContext);
+const createScriptContext = (ctx) => { 
+  const scriptContext = vm.createContext(ctx)
+  return scriptContext
+}
 
+const evalCodeceptjsCell = (scriptContext, cell) => {
+  const script = `(async() => {
+    ${cell.content}
+  })();`
+
+  const res = vm.runInContext(script, scriptContext);
   return res
 }
 
 module.exports = {
-  evalCodeceptjsCell
+  evalCodeceptjsCell,
+  createScriptContext
 }

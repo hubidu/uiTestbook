@@ -1,9 +1,10 @@
 const got = require('got')
 const Puppeteer = require('codeceptjs/lib/helper/Puppeteer')
-const {evalCodeceptjsCell} = require('./eval-script')
+const {createScriptContext, evalCodeceptjsCell} = require('./eval-script')
 
 const createContext = () => {
   const driver = new Puppeteer({
+    show: true,
     waitForTimeout: 10000,
     waitForAction: 0,
     restart: false,
@@ -22,7 +23,7 @@ const createContext = () => {
   }
 }
 
-const runCodeceptjsCell = async (events, cell) => {
+const runCodeceptjsCell = async (ctx, scriptContext, events, cell) => {
   try {
     console.log('Executing cell', cell)
 
@@ -41,7 +42,7 @@ const runCodeceptjsCell = async (events, cell) => {
       })
     })
 
-    const result = await evalCodeceptjsCell(ctx, cell)
+    const result = await evalCodeceptjsCell(scriptContext, cell)
 
     const screenshot = await ctx.I.page.screenshot()
 
@@ -78,6 +79,7 @@ const runCodeceptjsCell = async (events, cell) => {
 
 // TODO Should be able to recreate the context
 const ctx = createContext()
+const scriptContext = createScriptContext(ctx)
 
 const run = async (events, cells) => {
   if (!events) {
@@ -91,7 +93,7 @@ const run = async (events, cells) => {
   try {
     for (cell of cells) {
       if (cell.type === 'codeceptjs') {
-        await runCodeceptjsCell(events, cell)
+        await runCodeceptjsCell(ctx, scriptContext, events, cell)
       }
     }  
   } catch (err) {

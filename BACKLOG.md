@@ -9,15 +9,23 @@
 - Show screenshot of selected cell when selection changes
 - Store screenshot on executed cell
 - Print return values
+- Add an http client to run context
 
 # Doing
 
+
 # Backlog
 
-- Add an http client to run context
+- Save changed document (to file? to Google Drive)
+- Try: Find element by point
+- Add a margin to the last cell
+- Declare variable in one cell and use it across cells
+- Use simple react code editor
+- Use json viewer for results
+- BUG Run to selected is broken
+- Make action buttons sticky
 - Insert cell before/after selected cell
-- Declare variable in one cell and use in another
 - Button to restart browser instance
-- Save changed document
-- Keyboard Shortcut: Run selected cell with SHIFT + ENTER
+- Keyboard Shortcut: Run selected cell with SHIFT + ENTER (see also other iPython keyboard shortcuts)
 - Select multiple cells and "Run selection"
+- IDEA Include page objects into script execution context
