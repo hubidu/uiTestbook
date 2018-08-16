@@ -82,6 +82,11 @@ export default class IndexPage extends React.Component {
     this.updateScreenshot(selectedCell.screenshot)
   }
 
+  handleScreenshotMouseMove = e => {
+    const coords = [e.screenX, e.screenY]
+    console.log(coords)
+  }
+
   render () {
     return (
       <div className="wrapper container is-fluid">
@@ -105,7 +110,7 @@ export default class IndexPage extends React.Component {
           </div>
 
           <div className="browser">
-            <img id="screenshot" />
+            <img id="screenshot" onMouseMove={e => this.handleScreenshotMouseMove(e)} />
           </div>
 
         <style jsx global>{`
