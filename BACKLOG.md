@@ -16,6 +16,7 @@
 
 # Backlog
 
+- Before running very first cell, set url to about:blank always
 - Run from cell button
 - Distinguish between js code cell and codeceptjs cell
 - Save changed document (to file? to Google Drive)
