@@ -4,9 +4,9 @@ const {createScriptContext, evalCodeceptjsCell} = require('./eval-script')
 
 const createContext = () => {
   const driver = new Puppeteer({
-    show: true,
+    show: false,
     waitForTimeout: 10000,
-    getPageTimeout: 20000,
+    getPageTimeout: 10000,
     waitForAction: 0,
     restart: false,
     keepCookies: true,
@@ -47,7 +47,10 @@ const runCodeceptjsCell = async (ctx, scriptContext, events, cell) => {
 
     const result = await evalCodeceptjsCell(scriptContext, cell)
 
-    const screenshot = await ctx.I.page.screenshot()
+    const [screenshot, screenshotUrl] = await Promise.all([
+      await ctx.I.page.screenshot(),
+      await ctx.I.grabCurrentUrl()
+    ])
 
     events.emit('message', {
       type: 'execution.successful',
@@ -55,13 +58,17 @@ const runCodeceptjsCell = async (ctx, scriptContext, events, cell) => {
         state: 'execution-successful',
         executedAt: Date.now(),
         screenshot,
+        screenshotUrl,
         result,
         url,
         error: undefined
       })
     })
   } catch (err) {
-    const screenshot = await ctx.I.page.screenshot()
+    const [screenshot, screenshotUrl] = await Promise.all([
+      await ctx.I.page.screenshot(),
+      await ctx.I.grabCurrentUrl()
+    ])
 
     events.emit('message', {
       type: 'execution.failed',
@@ -69,6 +76,7 @@ const runCodeceptjsCell = async (ctx, scriptContext, events, cell) => {
         state: 'execution-failed',
         executedAt: Date.now(),
         screenshot,
+        screenshotUrl,
         error: {
           message: err.toString(),
           actual: err.actual,

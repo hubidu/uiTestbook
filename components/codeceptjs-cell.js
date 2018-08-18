@@ -57,7 +57,7 @@ export default class CodeceptjsCell extends React.Component {
 
         <div className={`CodeceptjsCell-content`}>
         {
-          this.props.isSelected ?
+          this.props.isEdited ?
             <TextareaAutosize 
               ref="cellEditor"
               autoFocus="true"

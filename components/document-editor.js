@@ -51,7 +51,7 @@ export default class StepEditor extends React.Component {
     runSteps(document.cells.slice(0, this.state.selectedCell))
   }
 
-  handleRunSelectedClick = async () => {
+  runSelectedCells = async () => {
     if (!this.state.selectedCell) return
     
     const cellIdx = this.state.document.cells.findIndex(cell => cell.id === this.state.selectedCell)
@@ -76,7 +76,7 @@ export default class StepEditor extends React.Component {
 
   }
 
-  handleSelectNextCell = () => {
+  selectAndEditNextCell = () => {
     const document = this.state.document
     const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
     const newSelectedCell = (idx + 1) < document.cells.length ? document.cells[idx + 1] : document.cells[0]
@@ -84,14 +84,27 @@ export default class StepEditor extends React.Component {
     this.handleCellClick(newSelectedCell)
   }
 
-  handleCellClick = (cell) => {
-    this.setState({
-      selectedCell: cell.id
-    })
+  selectNextCell = () => {
+    if (this.isEditing()) return
+    const document = this.state.document
+    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+    const newSelectedCell = (idx + 1) < document.cells.length ? document.cells[idx + 1] : document.cells[0]
 
-    if (this.props.onCellSelectionChange) {
-      this.props.onCellSelectionChange(cell)
-    }
+    this.selectCell(newSelectedCell)
+  }
+
+  selectPreviousCell = () => {
+    if (this.isEditing()) return
+    const document = this.state.document
+    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+    const newSelectedCell = (idx - 1) >= 0 ? document.cells[idx - 1] : document.cells[document.cells.length - 1]
+
+    this.selectCell(newSelectedCell)
+  }
+
+  handleCellClick = (cell) => {
+    this.selectCell(cell)
+    this.editSelectedCell()
   }
 
   handleCellContentChange = (cell, newContent) => {
@@ -102,35 +115,89 @@ export default class StepEditor extends React.Component {
     this.setState({document})
   }
 
-  handleCellKeyPress = (e) => {
+  handleKeypress = (e) => {
     console.log(e)
     if (e.key === 'Enter' && e.shiftKey) {         
       e.preventDefault()
       e.stopPropagation()
-      this.handleRunSelectedClick()
-    } else if (e.key === 'Tab' && e.shiftKey) {
+      this.runSelectedCells()
+      this.selectAndEditNextCell()
+    } else if (e.key === 'Enter' && e.ctrlKey) {
       e.preventDefault()
       e.stopPropagation()
-      this.handleSelectNextCell()
+      this.runSelectedCells()
+    } else if (e.key === 'Enter') {
+      this.editSelectedCell()
+    } else if (e.key === 'Escape') {
+      this.stopEditingCell()
+    } else if (e.key === 'ArrowUp') {
+      this.selectPreviousCell()
+    } else if (e.key === 'ArrowDown') {
+      this.selectNextCell()
     }
+  }
+
+  stopEditingCell = () => {
+    this.setState({
+      editedCell: undefined,
+    })
+  }
+
+  editSelectedCell = () => {
+    const { selectedCell } = this.state
+    if (this.isEditing()) return
+    if (selectedCell === undefined) return
+    this.setState({
+      selectedCell,
+      editedCell: selectedCell,
+    })
+  }
+
+  selectCell = cell => {
+    if (this.isSelected(cell)) return
+    
+    this.setState({
+      selectedCell: cell.id,
+      editedCell: undefined,
+    })
+
+    this.props.onCellSelectionChange && this.props.onCellSelectionChange(cell)
+  }
+
+  editCell = cell => {
+    this.setState({
+      selectedCell: cell.id,
+      editedCell: cell.id,
+    })
+
+  }
+
+  isEditing = () => {
+    return this.state.editedCell !== undefined
   }
 
   isSelected = (cell) => {
     return cell.id === this.state.selectedCell
   }
 
-  renderCell = (cell, isSelected) => {
+  isEdited = (cell) => {
+    return cell.id === this.state.editedCell
+  }
+
+  renderCell = (cell) => {
     switch (cell.type) {
       case 'markdown': 
         return <MarkdownStep 
         cell={cell} 
-        isSelected={isSelected} 
+        isSelected={this.isSelected(cell)} 
+        isEdited={this.isEdited(cell)}
         onClick={e => this.handleCellClick(cell)} 
       />
       case 'codeceptjs': 
         return <CodeceptjsStep 
           cell={cell} 
-          isSelected={isSelected} 
+          isSelected={this.isSelected(cell)} 
+          isEdited={this.isEdited(cell)}
           onCellContentChange={this.handleCellContentChange} 
           onClick={e => this.handleCellClick(cell)}
         />
@@ -138,11 +205,11 @@ export default class StepEditor extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.handleCellKeyPress, false)
+    document.addEventListener("keydown", this.handleKeypress, false)
   }
 
   componentWillUnmount() {
-     document.removeEventListener("keydown", this.handleCellKeyPress, false)
+     document.removeEventListener("keydown", this.handleKeypress, false)
   }
 
   render() {
@@ -152,7 +219,7 @@ export default class StepEditor extends React.Component {
           <button className="button is-small" onClick={e => this.handleRunAllClick()}>
             Run All
           </button>
-          <button className="button is-small" onClick={e => this.handleRunSelectedClick()}>
+          <button className="button is-small" onClick={e => this.runSelectedCells()}>
             Run Selected
           </button>
           <button className="button is-small" onClick={e => this.handleRunToSelectedClick()}>
@@ -168,7 +235,7 @@ export default class StepEditor extends React.Component {
       {
         this.state.document.cells.map((cell, i) => 
           <div key={i}>
-            {this.renderCell(cell, this.isSelected(cell))}
+            {this.renderCell(cell)}
           </div>
         )
       }    

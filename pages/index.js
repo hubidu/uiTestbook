@@ -13,7 +13,6 @@ export default class IndexPage extends React.Component {
 
    // init state with the prefetched messages
    state = {
-    messages: [],
     subscribe: false,
     subscribed: false
   }
@@ -60,30 +59,34 @@ export default class IndexPage extends React.Component {
     img.src = imageUrl;
   }
 
-  updateCell = (message) => {
+  updateCell = (cell) => {
     const document = this.state.document
-    const idx = document.cells.findIndex(c => c.id === message.cell.id)
-    document.cells[idx] = message.cell
+    const idx = document.cells.findIndex(c => c.id === cell.id)
+    document.cells[idx] = cell
     this.setState({
       document
     })
 
-    this.updateScreenshot(message.cell.screenshot)
+    this.updateScreenshot(cell.screenshot)
   }
 
-  // add messages from server to the state
   handleMessage = (message) => {
     console.log('message', message)
 
-    this.updateCell(message)
+    this.updateCell(message.cell)
   }
 
   handleCellSelectionChange = selectedCell => {
     this.updateScreenshot(selectedCell.screenshot)
+    this.setState({
+      selectedCell
+    })
   }
 
   handleScreenshotMouseMove = e => {
-    const coords = [e.screenX, e.screenY]
+    const screenshotEl = document.getElementById('screenshot')
+    const rect = screenshotEl.getBoundingClientRect()
+    const coords = [e.screenX - rect.left, e.screenY - rect.top]
     console.log(coords)
   }
 
@@ -106,10 +109,13 @@ export default class IndexPage extends React.Component {
         
         <div className="content">
           <div className="code">
-            <DocumentEditor document={this.props.document} onCellSelectionChange={this.handleCellSelectionChange} />
+            <DocumentEditor 
+              document={this.props.document} 
+              onCellSelectionChange={this.handleCellSelectionChange} />
           </div>
 
           <div className="browser">
+            <a>{this.state.selectedCell && this.state.selectedCell.screenshotUrl}</a>
             <img id="screenshot" onMouseMove={e => this.handleScreenshotMouseMove(e)} />
           </div>
 

@@ -10,21 +10,26 @@
 - Store screenshot on executed cell
 - Print return values
 - Add an http client to run context
+- Keyboard Shortcut: Run selected cell with SHIFT + ENTER (see also other iPython keyboard shortcuts)
 
 # Doing
 
 
 # Backlog
 
+- When using SHIFT + Enter: Add a new cell at the end
+- When using SHIFT + Enter: Should not advance selection when there is an error
+- Use the browser history api for navigation
+- Queue cell execution requests when using shift + Enter
 - Send screenshot separately to get a faster cell execution result
 - "Run from cell" action
 - Split cells
 - Before running very first cell, set url to about:blank always
+- New cells (or document?): Puppeteer, Appium
 - Distinguish between js code cell and codeceptjs cell
 - Save changed document (to file? to Google Drive)
 - Autosave documents
 - Import other documents
-- Implement async expressions
 - Try: Find element by point
 - Add a margin to the last cell
 - Declare variable in one cell and use it across cells
@@ -34,6 +39,5 @@
 - Make action buttons sticky
 - Insert cell before/after selected cell
 - Button to restart browser instance
-- Keyboard Shortcut: Run selected cell with SHIFT + ENTER (see also other iPython keyboard shortcuts)
 - Select multiple cells and "Run selection"
 - IDEA Include page objects into script execution context
