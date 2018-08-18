@@ -19,6 +19,7 @@
 - Send screenshot separately to get a faster cell execution result
 - "Run from cell" action
 - Split cells
+- Before running very first cell, set url to about:blank always
 - Distinguish between js code cell and codeceptjs cell
 - Save changed document (to file? to Google Drive)
 - Autosave documents
