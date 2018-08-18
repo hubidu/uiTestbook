@@ -1,10 +1,5 @@
 import React from 'react'
-// import TextareaAutosize from 'react-autosize-textarea';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-
+import TextareaAutosize from 'react-autosize-textarea';
 
 const trunc = (str, max = 80) => str && str.slice(0, max) + '...'
 function syntaxHighlight(json) {
@@ -61,19 +56,26 @@ export default class CodeceptjsCell extends React.Component {
         </div>
 
         <div className={`CodeceptjsCell-content`}>
-          {
-              <Editor
-                onKeyUp={e => this.handleCellKeyPress(e)}
-                value={this.props.cell.content} 
-                onValueChange={code => this.handleCellContentChange(code)}
-                highlight={code => highlight(code, languages.js)}
-              />
-          }
+        {
+          this.props.isSelected ?
+            <TextareaAutosize 
+              ref="cellEditor"
+              autoFocus="true"
+              className="CodeceptjsCell-editor" 
+              rows={5} 
+              value={this.props.cell.content} 
+              placeholder="Write codeceptjs code here"
+              onChange={e => this.handleCellContentChange(e.target.value)} />
+            :
+            <pre>{this.props.cell.content}</pre>
+        }
         </div>
         
         {
           this.props.cell.result && 
-          <pre className={`CodeceptjsCell-result`} dangerouslySetInnerHTML={{__html: syntaxHighlight(JSON.stringify(this.props.cell.result, null, 2))}} />
+          <pre 
+            className={`CodeceptjsCell-result`} 
+            dangerouslySetInnerHTML={{__html: syntaxHighlight(JSON.stringify(this.props.cell.result, null, 2))}} />
         }
 
         {
@@ -93,54 +95,37 @@ export default class CodeceptjsCell extends React.Component {
 
         </div>
         <style jsx global>{`
-
-        .CodeceptjsCell-contentEditable {
-          margin: 0;
-          color: #444;
-          padding: 2px;
+        .CodeceptjsCell-editor {
+          padding: 5px 1em;
           border: none;
           cursor: text;
+          color: #666;
           white-space: pre-wrap;
           width: 100%;
           font-family: monospace;
+          font-size: 0.8rem !important;
           background-color: #fafafa;
           line-height: 1.5em;
-          font-size: 0.875em;
         }
 
-        .CodeceptjsCell-contentEditable:focus {
+        .CodeceptjsCell-editor:focus {
           outline:0px !important;
           -webkit-appearance:none;
         }
 
-        .hl-key {
-          color: hsl(204, 86%, 53%);
-        }
-        .hl-string {
-          color: hsl(141, 71%, 48%);
-        }
-        .hl-number {
-          color: hsl(141, 71%, 48%);
-
-        }
-        .hl-boolean {
-          color: hsl(141, 71%, 48%);
-
-        }
-        `}</style>   
+        `}</style>           
         <style jsx>{`
         .CodeceptjsCell {
           padding: 5px;
+          padding-left: 1em;
           margin-bottom: 2px;
-          background-color: #fafafa;
         }
 
         .CodeceptjsCell--selected {
-          border: 1px solid #fafafa;
+          border: 1px solid #ddd;
           border-radius: 3px;
         }
         .CodeceptjsCell--state-initial {
-          border-left: 3px solid hsl(0, 0%, 48%);
         }        
         .CodeceptjsCell--state-running {
           border-left: 3px solid hsl(204, 86%, 53%);
@@ -157,15 +142,16 @@ export default class CodeceptjsCell extends React.Component {
         }
 
         .CodeceptjsCell-meta {
-          font-size: 0.7em;
+          font-size: 0.7rem;
         }
 
         .CodeceptjsCell-content {
-          font-size: 0.8em;
+          background-color: #fafafa;
+          font-size: 0.8rem !important;
         }
         
         .CodeceptjsCell-result {
-          font-size: 0.7em;
+          font-size: 0.7rem;
           margin-top: 3px;
           border: 1px solid #eee;
           border-radius: 3px;

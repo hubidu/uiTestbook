@@ -114,13 +114,19 @@ export default class IndexPage extends React.Component {
           </div>
 
         <style jsx global>{`
-        pre {
-          // Make text cursor visible in react simple code editor (because of bulma pre styles)
-          background:none !important;
+        .hl-key {
+          color: hsl(204, 86%, 53%);
         }
+        .hl-string {
+          color: hsl(141, 71%, 48%);
+        }
+        .hl-number {
+          color: hsl(141, 71%, 48%);
 
-        textarea::focus {
-          border: none;
+        }
+        .hl-boolean {
+          color: hsl(141, 71%, 48%);
+
         }
 
 
@@ -147,7 +153,7 @@ export default class IndexPage extends React.Component {
 
         #screenshot {
           // max-width: 100%;
-          // max-height: 90vh;
+          max-height: 90vh;
           // margin: auto;
         }
 
@@ -181,7 +187,7 @@ export default class IndexPage extends React.Component {
         .browser {
           padding: 5px;
           margin-top: 50px;
-          background: aliceblue;
+          background: #fafafa;
          -ms-flex: 1;
          -webkit-box-flex: 1;
          -moz-box-flex: 1;
