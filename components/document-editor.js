@@ -94,14 +94,30 @@ export default class StepEditor extends React.Component {
     this.setState({document})
   }
 
+  handleCellKeyPress = (e) => {
+    if (e.key === 'Enter' && e.shiftKey) {         
+      console.log('SHIFT + ENTER')
+    }
+  }
+
   isSelected = (cell) => {
     return cell.id === this.state.selectedCell
   }
 
   renderCell = (cell, isSelected) => {
     switch (cell.type) {
-      case 'markdown': return <MarkdownStep cell={cell} isSelected={isSelected} onClick={e => this.handleCellClick(cell)} />
-      case 'codeceptjs': return <CodeceptjsStep cell={cell} isSelected={isSelected} onCellContentChange={this.handleCellContentChange} onClick={e => this.handleCellClick(cell)} />
+      case 'markdown': 
+        return <MarkdownStep 
+        cell={cell} 
+        isSelected={isSelected} 
+        onClick={e => this.handleCellClick(cell)} />
+      case 'codeceptjs': 
+        return <CodeceptjsStep 
+          cell={cell} 
+          isSelected={isSelected} 
+          onCellContentChange={this.handleCellContentChange} 
+          onKeyUp={e => this.handleCellKeyPress(e)}
+          onClick={e => this.handleCellClick(cell)} />
     }
   }
 

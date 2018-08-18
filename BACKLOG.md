@@ -16,9 +16,13 @@
 
 # Backlog
 
-- Run from cell button
+- Send screenshot separately to get a faster cell execution result
+- "Run from cell" action
+- Split cells
 - Distinguish between js code cell and codeceptjs cell
 - Save changed document (to file? to Google Drive)
+- Autosave documents
+- Import other documents
 - Implement async expressions
 - Try: Find element by point
 - Add a margin to the last cell

@@ -42,14 +42,18 @@ export default class CodeceptjsCell extends React.Component {
   }
 
   handleCellClick = () => {
-    if (this.props.onClick) {
-      this.props.onClick(this.props.cell)
-    }
+    this.props.onClick && this.props.onClick(this.props.cell)
+  }
+
+  handleCellKeyPress = (e) => {
+    this.props.onCellKeyPress && this.props.onCellKeyPress(e)
   }
 
   render() {
     return (
-      <div className={`CodeceptjsCell CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'CodeceptjsCell--selected' : ''}`} onClick={e => this.handleCellClick()}>
+      <div className={`CodeceptjsCell CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'CodeceptjsCell--selected' : ''}`} 
+        onClick={e => this.handleCellClick()}
+      >
         <div className="CodeceptjsCell-meta">
           <a className="has-text-grey" href={this.props.cell.url} target="_blank">
             {trunc(this.props.cell.url)}
@@ -59,6 +63,7 @@ export default class CodeceptjsCell extends React.Component {
         <div className={`CodeceptjsCell-content`}>
           {
               <Editor
+                onKeyUp={e => this.handleCellKeyPress(e)}
                 value={this.props.cell.content} 
                 onValueChange={code => this.handleCellContentChange(code)}
                 highlight={code => highlight(code, languages.js)}
