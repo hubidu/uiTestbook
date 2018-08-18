@@ -76,6 +76,14 @@ export default class StepEditor extends React.Component {
 
   }
 
+  handleSelectNextCell = () => {
+    const document = this.state.document
+    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+    const newSelectedCell = (idx + 1) < document.cells.length ? document.cells[idx + 1] : document.cells[0]
+
+    this.handleCellClick(newSelectedCell)
+  }
+
   handleCellClick = (cell) => {
     this.setState({
       selectedCell: cell.id
@@ -95,8 +103,15 @@ export default class StepEditor extends React.Component {
   }
 
   handleCellKeyPress = (e) => {
+    console.log(e)
     if (e.key === 'Enter' && e.shiftKey) {         
-      console.log('SHIFT + ENTER')
+      e.preventDefault()
+      e.stopPropagation()
+      this.handleRunSelectedClick()
+    } else if (e.key === 'Tab' && e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.handleSelectNextCell()
     }
   }
 
@@ -110,15 +125,24 @@ export default class StepEditor extends React.Component {
         return <MarkdownStep 
         cell={cell} 
         isSelected={isSelected} 
-        onClick={e => this.handleCellClick(cell)} />
+        onClick={e => this.handleCellClick(cell)} 
+      />
       case 'codeceptjs': 
         return <CodeceptjsStep 
           cell={cell} 
           isSelected={isSelected} 
           onCellContentChange={this.handleCellContentChange} 
-          onKeyUp={e => this.handleCellKeyPress(e)}
-          onClick={e => this.handleCellClick(cell)} />
+          onClick={e => this.handleCellClick(cell)}
+        />
     }
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleCellKeyPress, false)
+  }
+
+  componentWillUnmount() {
+     document.removeEventListener("keydown", this.handleCellKeyPress, false)
   }
 
   render() {
