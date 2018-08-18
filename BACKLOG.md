@@ -11,12 +11,18 @@
 - Print return values
 - Add an http client to run context
 - Keyboard Shortcut: Run selected cell with SHIFT + ENTER (see also other iPython keyboard shortcuts)
+- Try: Find element by point
+- BUG Run to selected is broken
+- Use simple react code editor
 
 # Doing
 
 
 # Backlog
 
+- Add keyboard shortcuts to add/delete cell
+- Highlight element under mouse
+- BUG Click on cell does not work correctly
 - When using SHIFT + Enter: Add a new cell at the end
 - When using SHIFT + Enter: Should not advance selection when there is an error
 - Use the browser history api for navigation
@@ -30,12 +36,9 @@
 - Save changed document (to file? to Google Drive)
 - Autosave documents
 - Import other documents
-- Try: Find element by point
 - Add a margin to the last cell
 - Declare variable in one cell and use it across cells
-- Use simple react code editor
 - Use json viewer for results
-- BUG Run to selected is broken
 - Make action buttons sticky
 - Insert cell before/after selected cell
 - Button to restart browser instance
