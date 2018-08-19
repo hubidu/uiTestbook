@@ -21,6 +21,7 @@ const resetCells = (document, fromIndex = 0, resetUrl = true) => {
   for (let cell of includedCells) {
     cell.state = 'initial'
     cell.screenshot = undefined
+    cell.screenshotUrl = undefined
     cell.error = undefined
     cell.result = undefined
     if (resetUrl && i > 0) cell.url = undefined
@@ -29,6 +30,8 @@ const resetCells = (document, fromIndex = 0, resetUrl = true) => {
   }
   return document
 }
+
+const createCell  = (type = 'codeceptjs') => ({ id: guid(), type, state: 'initial', content: '\n await I.' })
 
 export default class StepEditor extends React.Component {
   constructor(props) {
@@ -62,18 +65,11 @@ export default class StepEditor extends React.Component {
   }
 
   handleAddCellClick = () => {
-    const document = this.state.document
-    document.cells.push({ id: guid(), type: 'codeceptjs', state: 'initial', content: '\n I.' })
-    this.setState({document})
+    this.insertCell('below')
   }
 
   handleDeleteCellClick = () => {
-    if (!this.state.selectedCell) return
-    const document = this.state.document
-    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
-    document.cells.splice(idx, 1)
-    this.setState({document})
-
+    this.cutCell()
   }
 
   selectAndEditNextCell = () => {
@@ -103,8 +99,7 @@ export default class StepEditor extends React.Component {
   }
 
   handleCellClick = (cell) => {
-    this.selectCell(cell)
-    this.editSelectedCell()
+    this.editCell(cell)
   }
 
   handleCellContentChange = (cell, newContent) => {
@@ -134,11 +129,50 @@ export default class StepEditor extends React.Component {
       this.selectPreviousCell()
     } else if (e.key === 'ArrowDown') {
       this.selectNextCell()
+    } else if (e.key === 'A' && e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.insertCell('above')
+    } else if (e.key === 'B' && e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.insertCell('below')
+    } else if (e.key === 'X' && e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.cutCell()
     }
+
+  }
+
+  insertCell = (where = 'below') => {
+    const {document, selectedCell} = this.state
+    const idx = selectedCell ? document.cells.findIndex(cell => cell.id === selectedCell) : 0
+
+    const newCell = createCell()
+    where === 'above' ? document.cells.splice(idx, 0, newCell) : document.cells.splice(idx + 1, 0, newCell)
+
+    this.setState({document, selectedCell: newCell.id, editedCell: newCell.id})
   }
 
   stopEditingCell = () => {
     this.setState({
+      editedCell: undefined,
+    })
+  }
+
+  cutCell = () => {
+    const {document, selectedCell} = this.state
+    if (selectedCell === undefined) return
+
+    const idx =  document.cells.findIndex(cell => cell.id === selectedCell)
+    document.cells.splice(idx, 1)
+
+    const newSelectedCell = (idx < document.cells.length) ? document.cells[idx - 1] : undefined
+
+    this.setState({
+      document,
+      selectedCell: newSelectedCell ? newSelectedCell.id : undefined,
       editedCell: undefined,
     })
   }

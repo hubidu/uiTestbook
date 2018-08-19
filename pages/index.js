@@ -4,6 +4,7 @@ import Head from 'next/head'
 import DocumentEditor from '../components/document-editor'
 
 import getDocument from '../services/get-document'
+import getElementByPoint from '../services/get-element-by-point'
 
 export default class IndexPage extends React.Component {
   constructor(props) {
@@ -31,6 +32,7 @@ export default class IndexPage extends React.Component {
     if (this.state.subscribe && !this.state.subscribed) {
       // connect to WS server and listen event
       this.props.socket.on('message', this.handleMessage)
+      this.props.socket.on('device', this.handleDeviceMessage)
       this.setState({ subscribed: true })
       this.props.socket.emit('foo', 'bar')
     }
@@ -70,6 +72,10 @@ export default class IndexPage extends React.Component {
     this.updateScreenshot(cell.screenshot)
   }
 
+  handleDeviceMessage = (message) => {
+    console.log(message)
+  }
+
   handleMessage = (message) => {
     console.log('message', message)
 
@@ -86,8 +92,9 @@ export default class IndexPage extends React.Component {
   handleScreenshotMouseMove = e => {
     const screenshotEl = document.getElementById('screenshot')
     const rect = screenshotEl.getBoundingClientRect()
-    const coords = [e.screenX - rect.left, e.screenY - rect.top]
-    console.log(coords)
+    const point = { x: e.screenX - rect.left, y: e.screenY - rect.top }
+
+    getElementByPoint(point)
   }
 
   render () {
@@ -109,13 +116,13 @@ export default class IndexPage extends React.Component {
         
         <div className="content">
           <div className="code">
-            <DocumentEditor 
+            <DocumentEditor
               document={this.props.document} 
               onCellSelectionChange={this.handleCellSelectionChange} />
           </div>
 
           <div className="browser">
-            <a>{this.state.selectedCell && this.state.selectedCell.screenshotUrl}</a>
+            <a className="browser-bar is-size-7">{this.state.selectedCell && this.state.selectedCell.screenshotUrl}</a>
             <img id="screenshot" onMouseMove={e => this.handleScreenshotMouseMove(e)} />
           </div>
 
@@ -158,6 +165,7 @@ export default class IndexPage extends React.Component {
         }
 
         #screenshot {
+          display: block;
           // max-width: 100%;
           max-height: 90vh;
           // margin: auto;

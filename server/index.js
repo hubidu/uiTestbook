@@ -6,6 +6,7 @@ const port = parseInt(process.env.PORT, 10) || 3001
 const server = express()
 
 const runner = require('./src/runner')
+const deviceService = require('./src/device-service')
 const documentStore = require('./src/document-store')
 
 const jsonParser = bodyParser.json()
@@ -19,7 +20,7 @@ server.use(function(req, res, next) {
 /**
  * REST API
  */
-let events
+let events // HACK of course we should be able to handle multiple connections
 
 server.get('/api/documents/:docName', (req, res) => {
   res.json(documentStore.getDocument(req.params.docName))
@@ -32,6 +33,15 @@ server.post('/api/run-steps', jsonParser, (req, res) => {
     result: 'ok'
   })
 })
+
+server.post('/api/get-element-by-point', jsonParser, (req, res) => {
+  deviceService.elementFromPoint(events, runner.getCurrentContext(), req.body)
+
+  res.json({
+    result: 'ok'
+  })
+})
+
 
 const httpServer = server.listen(port, (err) => {
   if (err) throw err

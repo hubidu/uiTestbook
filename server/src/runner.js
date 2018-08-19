@@ -93,6 +93,8 @@ const runCodeceptjsCell = async (ctx, scriptContext, events, cell) => {
 const ctx = createContext()
 const scriptContext = createScriptContext(ctx)
 
+const getCurrentContext = () => ctx
+
 const run = async (events, cells) => {
   if (!events) {
     console.log('WARNING Expected events')
@@ -117,5 +119,6 @@ const run = async (events, cells) => {
 }
 
 module.exports = {
-  run
+  run,
+  getCurrentContext
 }
