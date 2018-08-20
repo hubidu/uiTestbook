@@ -10,19 +10,13 @@ const getDocument = (docName) => {
         id: '1',
         state: 'initial',
         type: 'markdown', 
-        content: `
-# Test Notebook
-
-Make UI testing more **FUN**
-        ` 
+        content: `### A Basic Test Document` 
       },
       { 
         id: '2',
         state: 'initial',
         type: 'markdown', 
-        content: `
-Let's start with a simple codeceptjs test 
-        ` 
+        content: `Let's make UI testing **suck less**. With executable documents` 
       },
       { 
         id: '3',

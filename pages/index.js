@@ -73,7 +73,10 @@ export default class IndexPage extends React.Component {
   }
 
   handleDeviceMessage = (message) => {
-    console.log(message)
+    if (message.element) {
+      this.setState({highlightedElement: message.element})
+      console.log(message.element)
+    }
   }
 
   handleMessage = (message) => {
@@ -92,7 +95,9 @@ export default class IndexPage extends React.Component {
   handleScreenshotMouseMove = e => {
     const screenshotEl = document.getElementById('screenshot')
     const rect = screenshotEl.getBoundingClientRect()
-    const point = { x: e.screenX - rect.left, y: e.screenY - rect.top }
+    const point = { x: e.pageX - rect.left, y: e.pageY - rect.top }
+    
+    // TODO Need to scale the point using the screenshot image size
 
     getElementByPoint(point)
   }
@@ -123,97 +128,118 @@ export default class IndexPage extends React.Component {
 
           <div className="browser">
             <a className="browser-bar is-size-7">{this.state.selectedCell && this.state.selectedCell.screenshotUrl}</a>
-            <img id="screenshot" onMouseMove={e => this.handleScreenshotMouseMove(e)} />
+            <div className="browser-screenshot">
+              <img 
+                id="screenshot"  
+                onMouseMove={e => this.handleScreenshotMouseMove(e)} 
+              />
+              {
+                this.state.highlightedElement &&
+                <div style={{
+                  position: 'absolute', 
+                  pointerEvents: 'none',
+                  zIndex: 1000, 
+                  border: '1px solid red', 
+                  top: this.state.highlightedElement.bounds.top, 
+                  left: this.state.highlightedElement.bounds.left,
+                  width: this.state.highlightedElement.bounds.width,
+                  height: this.state.highlightedElement.bounds.height
+                }}>
+
+                </div>
+              }
+            </div>
           </div>
+        </div>
 
-        <style jsx global>{`
-        .hl-key {
-          color: hsl(204, 86%, 53%);
-        }
-        .hl-string {
-          color: hsl(141, 71%, 48%);
-        }
-        .hl-number {
-          color: hsl(141, 71%, 48%);
+      <style jsx global>{`
+      .hl-key {
+        color: hsl(204, 86%, 53%);
+      }
+      .hl-string {
+        color: hsl(141, 71%, 48%);
+      }
+      .hl-number {
+        color: hsl(141, 71%, 48%);
 
-        }
-        .hl-boolean {
-          color: hsl(141, 71%, 48%);
+      }
+      .hl-boolean {
+        color: hsl(141, 71%, 48%);
+      }
 
-        }
+      html,
+      body,
+      #__next,
+      .wrapper {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
 
+      body {
+        overflow:hidden;
+      }
 
-        html,
-        body,
-        #__next,
-        .wrapper {
-          height: 100%;
-          padding: 0;
-          margin: 0;
-        }
+      header {
+        padding: 10px;
+        position: absolute;
+        background: white;
+        height: 30px;
+        width: 100%;
+      }
 
-        body {
-          overflow:hidden;
-        }
+      #screenshot {
+        display: block;
+        // max-width: 100%;
+        max-height: 90vh;
+        // margin: auto;
+      }
 
-        header {
-          padding: 10px;
-          position: absolute;
-          background: white;
-          height: 30px;
-          width: 100%;
-        }
+      .content {
+        height: 100%;
+        display: -ms-flexbox;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-box;
+        display: box;
 
-        #screenshot {
-          display: block;
-          // max-width: 100%;
-          max-height: 90vh;
-          // margin: auto;
-        }
+        -ms-flex-direction: row;
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        -ms-box-orient: horizontal;
+        box-orient: horizontal;
+      }
 
-        .content {
-          height: 100%;
-          display: -ms-flexbox;
-          display: -webkit-box;
-          display: -moz-box;
-          display: -ms-box;
-          display: box;
+      .code {
+        width: 40%;
+        -ms-flex: 0 100px;
+        -webkit-box-flex:  0;
+        -moz-box-flex:  0;
+       -ms-box-flex:  0;
+        box-flex:  0;
+        padding: 5px;
+        margin-top: 50px;
+        overflow-y: scroll;
+      }
 
-          -ms-flex-direction: row;
-          -webkit-box-orient: horizontal;
-          -moz-box-orient: horizontal;
-          -ms-box-orient: horizontal;
-          box-orient: horizontal;
-        }
+      .browser {
+        padding: 5px;
+        margin-top: 50px;
+        background: #fafafa;
+       -ms-flex: 1;
+       -webkit-box-flex: 1;
+       -moz-box-flex: 1;
+       -ms-box-flex: 1;
+        box-flex: 1;
+        overflow-y: scroll;
+      }
 
-        .code {
-          width: 40%;
-          -ms-flex: 0 100px;
-          -webkit-box-flex:  0;
-          -moz-box-flex:  0;
-         -ms-box-flex:  0;
-          box-flex:  0;
-          padding: 5px;
-          margin-top: 50px;
-          overflow-y: scroll;
-        }
+      .browser-screenshot {
+        position: relative;
+      }
 
-        .browser {
-          padding: 5px;
-          margin-top: 50px;
-          background: #fafafa;
-         -ms-flex: 1;
-         -webkit-box-flex: 1;
-         -moz-box-flex: 1;
-         -ms-box-flex: 1;
-          box-flex: 1;
-          overflow-y: scroll;
-
-        }
-
-        `}</style>
-      </div>
-      </div>
+      `}</style>
+    </div>
     )
   }
 }

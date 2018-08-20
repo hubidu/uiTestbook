@@ -2,8 +2,10 @@ const elementFromPoint = async (events, ctx, point) => {
   const { I } = ctx
 
   console.log('Getting element under', point)
-  const elementBounds = await I.executeScript(function(point) {
+  const element = await I.executeScript(function(point) {
     var elem = document.elementFromPoint(point.x, point.y)
+    if (!elem) return
+
     elem.style = '2px solid red'
     return { 
       bounds: JSON.stringify(elem.getBoundingClientRect()),
@@ -11,10 +13,12 @@ const elementFromPoint = async (events, ctx, point) => {
     }
   }, point)
 
+  element.bounds = JSON.parse(element.bounds)
+
   events.emit('device', {
     type: 'element-from-point',
     point,
-    elementBounds
+    element
   })
 }
 
