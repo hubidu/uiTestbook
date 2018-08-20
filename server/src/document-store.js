@@ -1,10 +1,12 @@
 const assert = require('assert')
 
-const getDocument = (docName) => {
-   assert(docName, 'Expected a document name')
-
-  return {
-    title: 'Example document',
+const docs = {
+  'Puppeteer Example': {
+    name: 'Puppeteer Example',
+    meta: {
+      title: 'Basic test document',
+      type: 'puppeteer',
+    },
     cells: [
       { 
         id: '1',
@@ -21,42 +23,70 @@ const getDocument = (docName) => {
       { 
         id: '3',
         state: 'initial',
-        type: 'codeceptjs', 
+        type: 'webdriverio', 
+        content: `\nawait I.amOnPage('http://www.google.de')` 
+      },
+    ]
+  },
+
+  'WebdriverIO Example': {
+    name: 'WebdriverIO Example',
+    meta: {
+      title: 'Basic test document for webdriverio/Android testing',
+      type: 'webdriverio',
+    },
+    cells: [
+      { 
+        id: '1',
+        state: 'initial',
+        type: 'markdown', 
+        content: `### A Basic Test Document` 
+      },
+      { 
+        id: '2',
+        state: 'initial',
+        type: 'webdriverio', 
+        content: `\nawait I.init()`
+      },
+      { 
+        id: '3',
+        state: 'initial',
+        type: 'webdriverio', 
         content: `
-await I.amOnPage('http://www.google.de')
-        ` 
+await I.waitAndClick(byId('de.check24.check24.beta:id/actionCenter'))
+await I.waitAndClick(byId('de.check24.check24.beta:id/comparison_item'))
+
+      `
       },
       { 
         id: '4',
         state: 'initial',
-        type: 'codeceptjs', 
+        type: 'webdriverio', 
         content: `
-await I.fillField('q', 'codeceptjs')
-await I.pressKey('Enter')
-await I.waitForNavigation()
-        ` 
+await I.waitAndClick(byId('de.check24.check24.beta:id/close_btn'))
+
+await I.waitAndClick(byId('de.check24.check24.beta:id/activity_tile_container'))
+
+await I.waitAndSee('~Kfz-Versicherung')
+              `
       },
       { 
         id: '5',
         state: 'initial',
-        type: 'codeceptjs', 
+        type: 'webdriverio', 
         content: `
-await I.see('CodeceptJS')
-        ` 
+console.log(await I.contexts())
+await I.context('WEBVIEW_de.check24.check24.beta')
+      `
       },
-      { 
-        id: '6',
-        state: 'initial',
-        type: 'codeceptjs', 
-        content: `
-await I.click('End-to-End Testing With CodeceptJS - Monterail')
-await I.waitForNavigation()
-await I.see('Something')
-        ` 
-      }
     ]
-    
-  }
+  },
+}
+
+const getDocument = (docName) => {
+   assert(docName, 'Expected a document name')
+
+  return docs[docName]
 }
 
 module.exports = {

@@ -26,8 +26,12 @@ server.get('/api/documents/:docName', (req, res) => {
   res.json(documentStore.getDocument(req.params.docName))
 })
 
-server.post('/api/run-steps', jsonParser, (req, res) => {
-  runner.run(events, req.body)
+server.post('/api/documents/:docName/run-selected', jsonParser, (req, res) => {
+  const document = documentStore.getDocument(req.params.docName)
+  if (!document) return res.status(404).json({message: 'document not found'})
+
+  const selectedCells = req.body
+  runner.run(events, document, selectedCells)
 
   res.json({
     result: 'ok'

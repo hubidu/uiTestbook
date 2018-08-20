@@ -11,7 +11,7 @@ const createScriptContext = (ctx, retvals) => {
   return scriptContext
 }
 
-const evalCodeceptjsCell = (scriptContext, cell) => {
+const evalCell = (scriptContext, cell) => {
   const code = cell.content.replace(/const /g, "this.") // execute in this context
   const scriptTemplate = `(async() => {
     ${code}
@@ -23,6 +23,6 @@ const evalCodeceptjsCell = (scriptContext, cell) => {
 }
 
 module.exports = {
-  evalCodeceptjsCell,
+  evalCell,
   createScriptContext
 }

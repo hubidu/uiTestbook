@@ -20,6 +20,8 @@
 
 # Backlog
 
+- Click on executed cell should show screenshot
+- webdriverio: reInit the runner when running all cells
 - Add keyboard shortcuts to add/delete cell
 - Highlight element under mouse
 - BUG Click on cell does not work correctly

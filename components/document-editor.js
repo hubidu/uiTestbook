@@ -3,7 +3,7 @@ import React from 'react'
 import MarkdownStep from './markdown-cell'
 import CodeceptjsStep from './codeceptjs-cell'
 
-import runSteps from '../services/run-steps'
+import runCells from '../services/run-cells'
 
 function guid() {
   function s4() {
@@ -44,14 +44,15 @@ export default class StepEditor extends React.Component {
   handleRunAllClick = async () => {
     const document = resetCells(this.state.document)
     this.setState({document})
-    runSteps(document.cells)
+
+    runCells(document.name, document.cells)
   }
 
   handleRunToSelectedClick = async () => {
     const document = resetCells(this.state.document)
     this.setState({document})
 
-    runSteps(document.cells.slice(0, this.state.selectedCell))
+    runCells(document.name, document.cells.slice(0, this.state.selectedCell))
   }
 
   runSelectedCells = async () => {
@@ -61,7 +62,7 @@ export default class StepEditor extends React.Component {
     const document = resetCells(this.state.document, cellIdx, false)
     this.setState({document})
 
-    runSteps([this.state.document.cells[cellIdx]])
+    runCells(document.name, [this.state.document.cells[cellIdx]])
   }
 
   handleAddCellClick = () => {
@@ -146,10 +147,11 @@ export default class StepEditor extends React.Component {
   }
 
   insertCell = (where = 'below') => {
+    if (this.isEditing) return
     const {document, selectedCell} = this.state
     const idx = selectedCell ? document.cells.findIndex(cell => cell.id === selectedCell) : 0
 
-    const newCell = createCell()
+    const newCell = createCell(document.meta.type)
     where === 'above' ? document.cells.splice(idx, 0, newCell) : document.cells.splice(idx + 1, 0, newCell)
 
     this.setState({document, selectedCell: newCell.id, editedCell: newCell.id})
@@ -227,7 +229,8 @@ export default class StepEditor extends React.Component {
         isEdited={this.isEdited(cell)}
         onClick={e => this.handleCellClick(cell)} 
       />
-      case 'codeceptjs': 
+      case 'puppeteer': 
+      case 'webdriverio':
         return <CodeceptjsStep 
           cell={cell} 
           isSelected={this.isSelected(cell)} 

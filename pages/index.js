@@ -19,7 +19,8 @@ export default class IndexPage extends React.Component {
   }
 
   static async getInitialProps({}) {
-    const document = await getDocument('Example Document')
+    // TODO Let the user select the document (or make it configurable via url parameter)
+    const document = await getDocument('WebdriverIO Example')
     return { document }
   }
 
@@ -53,12 +54,18 @@ export default class IndexPage extends React.Component {
   updateScreenshot = (screenshot) => {
     if (!screenshot) return
     
-    const arrayBufferView = new Uint8Array(screenshot);
-    const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
-    const urlCreator = window.URL || window.webkitURL;
-    const imageUrl = urlCreator.createObjectURL( blob );
-    const img = document.querySelector( "#screenshot" );
-    img.src = imageUrl;
+    if (typeof screenshot === 'string') {
+      const img = document.querySelector( "#screenshot" );
+      img.src = `data:image/png;base64,${screenshot}`;
+
+    } else {
+      const arrayBufferView = new Uint8Array(screenshot);
+      const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+      const urlCreator = window.URL || window.webkitURL;
+      const imageUrl = urlCreator.createObjectURL( blob );
+      const img = document.querySelector( "#screenshot" );
+      img.src = imageUrl;
+    }
   }
 
   updateCell = (cell) => {
