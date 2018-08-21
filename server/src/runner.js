@@ -1,3 +1,4 @@
+const assert = require('assert')
 
 const {getRunnerForCellType} = require('./cell-runners')
 
@@ -10,10 +11,11 @@ const run = async (events, document, cells) => {
   }
 
   const runner = getRunnerForCellType(document.meta.type)
+  assert(runner, `No runner found for doc type ${document.meta.type}`)
 
   const {ctx, scriptContext} = runner.getContexts()
 
-  await runner.before()
+  await runner.before(ctx)
 
   try {
     for (cell of cells) {

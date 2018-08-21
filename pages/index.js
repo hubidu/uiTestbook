@@ -18,9 +18,10 @@ export default class IndexPage extends React.Component {
     subscribed: false
   }
 
-  static async getInitialProps({}) {
+  static async getInitialProps({query: {docname}}) {
     // TODO Let the user select the document (or make it configurable via url parameter)
-    const document = await getDocument('WebdriverIO Example')
+    console.log(docname)
+    const document = await getDocument(docname || 'WebdriverIO')
     return { document }
   }
 

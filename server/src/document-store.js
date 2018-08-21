@@ -1,8 +1,8 @@
 const assert = require('assert')
 
 const docs = {
-  'Puppeteer Example': {
-    name: 'Puppeteer Example',
+  'Puppeteer': {
+    name: 'Puppeteer',
     meta: {
       title: 'Basic test document',
       type: 'puppeteer',
@@ -29,8 +29,8 @@ const docs = {
     ]
   },
 
-  'WebdriverIO Example': {
-    name: 'WebdriverIO Example',
+  'WebdriverIO': {
+    name: 'WebdriverIO',
     meta: {
       title: 'Basic test document for webdriverio/Android testing',
       type: 'webdriverio',
