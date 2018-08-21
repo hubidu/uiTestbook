@@ -6,6 +6,13 @@ const getCurrentContext = () => ctx
 
 const sessions = {}
 
+const closeSession = async sessionId => {
+  if (!sessions[sessionId]) return
+
+  const runner = sessions[sessionId];
+  await runner.close()
+}
+
 const getRunnerForSession = (sessionId, documentType) => {
   sessions[sessionId] = sessions[sessionId] || getRunnerForCellType(documentType)
   return sessions[sessionId]
@@ -41,5 +48,6 @@ const run = async (sessionId, events, document, cells) => {
 
 module.exports = {
   run,
-  getRunnerForSession
+  getRunnerForSession,
+  closeSession
 }

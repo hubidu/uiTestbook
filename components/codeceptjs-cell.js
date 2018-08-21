@@ -46,7 +46,7 @@ export default class CodeceptjsCell extends React.Component {
 
   render() {
     return (
-      <div className={`CodeceptjsCell CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'CodeceptjsCell--selected' : ''}`} 
+      <div className={`CodeceptjsCell CodeceptjsCell--state-${this.props.cell.state} ${this.props.isSelected ? 'CodeceptjsCell--selected' : ''} ${this.props.isLastCell ? 'CodeceptjsCell--last' : ''}`} 
         onClick={e => this.handleCellClick()}
       >
         <div className="CodeceptjsCell-meta">
@@ -119,6 +119,10 @@ export default class CodeceptjsCell extends React.Component {
           padding: 5px;
           padding-left: 1em;
           margin-bottom: 2px;
+        }
+
+        .CodeceptjsCell--last {
+          margin-bottom: 100px;
         }
 
         .CodeceptjsCell--selected {

@@ -14,18 +14,25 @@
 - Try: Find element by point
 - BUG Run to selected is broken
 - Use simple react code editor
+- Click on executed cell should show screenshot
+- Add keyboard shortcuts to add/delete cell
+- BUG Click on cell does not work correctly
+- When using SHIFT + Enter: Add a new cell at the end
 
 # Doing
 
 
 # Backlog
 
-- Click on executed cell should show screenshot
+- PRB webdriverio: can not take screenshots when in webview
+- Reset cell state when cell has been edited
+- Scroll with selected cell
 - webdriverio: reInit the runner when running all cells
-- Add keyboard shortcuts to add/delete cell
+- webdriverio: get source and
+- webdriverio: Show source in xml view
+- Should disable ui when running cells
+- Last run cell should be selected
 - Highlight element under mouse
-- BUG Click on cell does not work correctly
-- When using SHIFT + Enter: Add a new cell at the end
 - When using SHIFT + Enter: Should not advance selection when there is an error
 - Use the browser history api for navigation
 - Queue cell execution requests when using shift + Enter

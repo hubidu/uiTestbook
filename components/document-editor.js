@@ -4,6 +4,7 @@ import MarkdownStep from './markdown-cell'
 import CodeceptjsStep from './codeceptjs-cell'
 
 import runCells from '../services/run-cells'
+import runAllCells from '../services/run-all-cells'
 
 function guid() {
   function s4() {
@@ -45,14 +46,14 @@ export default class StepEditor extends React.Component {
     const document = resetCells(this.state.document)
     this.setState({document})
 
-    runCells(document.name, document.cells)
+    runAllCells(document.name, document.cells)
   }
 
   handleRunToSelectedClick = async () => {
     const document = resetCells(this.state.document)
     this.setState({document})
 
-    runCells(document.name, document.cells.slice(0, this.state.selectedCell))
+    runAllCells(document.name, document.cells.slice(0, this.state.selectedCell))
   }
 
   runSelectedCells = async () => {
@@ -112,7 +113,7 @@ export default class StepEditor extends React.Component {
   }
 
   handleKeypress = (e) => {
-    console.log(e)
+    // console.log(e)
     if (e.key === 'Enter' && e.shiftKey) {         
       e.preventDefault()
       e.stopPropagation()
@@ -221,11 +222,12 @@ export default class StepEditor extends React.Component {
     return cell.id === this.state.editedCell
   }
 
-  renderCell = (cell) => {
+  renderCell = (cell, isLastCell) => {
     switch (cell.type) {
       case 'markdown': 
         return <MarkdownStep 
         cell={cell} 
+        isLastCell={isLastCell}
         isSelected={this.isSelected(cell)} 
         isEdited={this.isEdited(cell)}
         onClick={e => this.handleCellClick(cell)} 
@@ -234,6 +236,7 @@ export default class StepEditor extends React.Component {
       case 'webdriverio':
         return <CodeceptjsStep 
           cell={cell} 
+          isLastCell={isLastCell}
           isSelected={this.isSelected(cell)} 
           isEdited={this.isEdited(cell)}
           onCellContentChange={this.handleCellContentChange} 
@@ -273,7 +276,7 @@ export default class StepEditor extends React.Component {
       {
         this.state.document.cells.map((cell, i) => 
           <div key={i}>
-            {this.renderCell(cell)}
+            {this.renderCell(cell, this.state.document.cells.length - 1 === i)}
           </div>
         )
       }    

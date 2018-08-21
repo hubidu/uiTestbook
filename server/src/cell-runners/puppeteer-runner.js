@@ -11,21 +11,25 @@ let ctx
 let scriptContext
 
 const _takeScreenshot = async I => {
-  const [screenshot, pageUrl, viewportSize, pageTitle] = await Promise.all([
-    await I.page.screenshot(),
-    await I.grabCurrentUrl(),
-    await I.executeScript(getViewportSize),
-    await I.grabTitle()
-  ])
-  
-  const ss = {
-    screenshot,
-    url: pageUrl,
-    title: pageTitle,
-    size: viewportSize
+  try {
+    const [screenshot, pageUrl, viewportSize, pageTitle] = await Promise.all([
+      await I.page.screenshot(),
+      await I.grabCurrentUrl(),
+      await I.executeScript(getViewportSize),
+      await I.grabTitle()
+    ])
+    
+    const ss = {
+      screenshot,
+      url: pageUrl,
+      title: pageTitle,
+      size: viewportSize
+    }
+    
+    return ss  
+  } catch (err) {
+    console.log('WARNING Error taking screenshot', err)
   }
-  
-  return ss
 }
 
 const before = async (ctx) => {

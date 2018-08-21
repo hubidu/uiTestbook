@@ -52,15 +52,13 @@ const docs = {
         id: '2',
         state: 'initial',
         type: 'webdriverio', 
-        content: `\nawait I.init()`
+        content: `await I.init()`
       },
       { 
         id: '3',
         state: 'initial',
         type: 'webdriverio', 
-        content: `
-await I.waitAndClick(byId('de.check24.check24.beta:id/actionCenter'))
-await I.waitAndClick(byId('de.check24.check24.beta:id/comparison_item'))
+        content: `await I.waitAndClick(byId('de.check24.check24.beta:id/actionCenter'))\nawait I.waitAndClick(byId('de.check24.check24.beta:id/comparison_item'))
 
       `
       },
@@ -68,22 +66,19 @@ await I.waitAndClick(byId('de.check24.check24.beta:id/comparison_item'))
         id: '4',
         state: 'initial',
         type: 'webdriverio', 
-        content: `
-await I.waitAndClick(byId('de.check24.check24.beta:id/close_btn'))
-
-await I.waitAndClick(byId('de.check24.check24.beta:id/activity_tile_container'))
-
-await I.waitAndSee('~Kfz-Versicherung')
-              `
+        content: `await I.waitAndClick(byId('de.check24.check24.beta:id/close_btn'))\nawait I.waitAndClick(byId('de.check24.check24.beta:id/activity_tile_container'))\nawait I.waitAndSee('~Kfz-Versicherung')`
       },
       { 
         id: '5',
         state: 'initial',
         type: 'webdriverio', 
-        content: `
-console.log(await I.contexts())
-await I.context('WEBVIEW_de.check24.check24.beta')
-      `
+        content: `return await I.contexts()`
+      },
+      { 
+        id: '6',
+        state: 'initial',
+        type: 'webdriverio', 
+        content: `await I.context('WEBVIEW_de.check24.check24.beta')`
       },
     ]
   },

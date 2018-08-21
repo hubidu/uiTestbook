@@ -40,6 +40,19 @@ server.post('/api/documents/:docName/run-selected', jsonParser, (req, res) => {
   })
 })
 
+server.post('/api/documents/:docName/run-all', jsonParser, async (req, res) => {
+  const document = documentStore.getDocument(req.params.docName)
+  if (!document) return res.status(404).json({message: 'document not found'})
+
+  const cells = req.body
+  await runner.closeSession()
+  runner.run(FakeSessionId, events, document, cells)
+
+  res.json({
+    result: 'ok'
+  })
+})
+
 server.post('/api/get-element-by-point', jsonParser, (req, res) => {
   const cellRunner = runner.getRunnerForSession(FakeSessionId)
   assert(cellRunner, `No cell runner for session id ${FakeSessionId}`)

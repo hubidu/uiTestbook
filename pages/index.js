@@ -56,8 +56,7 @@ export default class IndexPage extends React.Component {
     
     if (typeof screenshot.screenshot === 'string') {
       const img = document.querySelector( "#screenshot" );
-      img.src = `data:image/png;base64,${screenshot}`;
-
+      img.src = `data:image/png;base64,${screenshot.screenshot}`;
     } else {
       const arrayBufferView = new Uint8Array(screenshot.screenshot);
       const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
@@ -204,7 +203,7 @@ export default class IndexPage extends React.Component {
 
       #screenshot {
         display: block;
-        max-width: 100%;
+        // max-width: 100%;
         // max-height: 90vh;
         // margin: auto;
       }
