@@ -1,3 +1,4 @@
+const assert = require('assert')
 const express = require('express')
 const bodyParser = require('body-parser')
 
@@ -21,6 +22,7 @@ server.use(function(req, res, next) {
  * REST API
  */
 let events // HACK of course we should be able to handle multiple connections
+const FakeSessionId = 1
 
 server.get('/api/documents/:docName', (req, res) => {
   res.json(documentStore.getDocument(req.params.docName))
@@ -31,7 +33,7 @@ server.post('/api/documents/:docName/run-selected', jsonParser, (req, res) => {
   if (!document) return res.status(404).json({message: 'document not found'})
 
   const selectedCells = req.body
-  runner.run(events, document, selectedCells)
+  runner.run(FakeSessionId, events, document, selectedCells)
 
   res.json({
     result: 'ok'
@@ -39,7 +41,10 @@ server.post('/api/documents/:docName/run-selected', jsonParser, (req, res) => {
 })
 
 server.post('/api/get-element-by-point', jsonParser, (req, res) => {
-  deviceService.elementFromPoint(events, runner.getCurrentContext(), req.body)
+  const cellRunner = runner.getRunnerForSession(FakeSessionId)
+  assert(cellRunner, `No cell runner for session id ${FakeSessionId}`)
+
+  deviceService.elementFromPoint(events, cellRunner.getContexts(), req.body)
 
   res.json({
     result: 'ok'

@@ -4,13 +4,20 @@ const {getRunnerForCellType} = require('./cell-runners')
 
 const getCurrentContext = () => ctx
 
-const run = async (events, document, cells) => {
+const sessions = {}
+
+const getRunnerForSession = (sessionId, documentType) => {
+  sessions[sessionId] = sessions[sessionId] || getRunnerForCellType(documentType)
+  return sessions[sessionId]
+}
+
+const run = async (sessionId, events, document, cells) => {
   if (!events) {
     console.log('WARNING Expected events')
     return
   }
 
-  const runner = getRunnerForCellType(document.meta.type)
+  const runner = getRunnerForSession(sessionId, document.meta.type)
   assert(runner, `No runner found for doc type ${document.meta.type}`)
 
   const {ctx, scriptContext} = runner.getContexts()
@@ -34,5 +41,5 @@ const run = async (events, document, cells) => {
 
 module.exports = {
   run,
-  getCurrentContext
+  getRunnerForSession
 }

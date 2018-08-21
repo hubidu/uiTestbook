@@ -130,15 +130,15 @@ export default class StepEditor extends React.Component {
       this.selectPreviousCell()
     } else if (e.key === 'ArrowDown') {
       this.selectNextCell()
-    } else if (e.key === 'A' && e.shiftKey) {
+    } else if (e.key === 'A' && e.shiftKey && !this.isEditing()) {
       e.preventDefault()
       e.stopPropagation()
       this.insertCell('above')
-    } else if (e.key === 'B' && e.shiftKey) {
+    } else if (e.key === 'B' && e.shiftKey && !this.isEditing()) {
       e.preventDefault()
       e.stopPropagation()
       this.insertCell('below')
-    } else if (e.key === 'X' && e.shiftKey) {
+    } else if (e.key === 'X' && e.shiftKey && !this.isEditing()) {
       e.preventDefault()
       e.stopPropagation()
       this.cutCell()
@@ -147,7 +147,7 @@ export default class StepEditor extends React.Component {
   }
 
   insertCell = (where = 'below') => {
-    if (this.isEditing) return
+    if (this.isEditing()) return
     const {document, selectedCell} = this.state
     const idx = selectedCell ? document.cells.findIndex(cell => cell.id === selectedCell) : 0
 
@@ -206,6 +206,7 @@ export default class StepEditor extends React.Component {
       editedCell: cell.id,
     })
 
+    this.props.onCellSelectionChange && this.props.onCellSelectionChange(cell)
   }
 
   isEditing = () => {

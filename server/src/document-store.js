@@ -26,6 +26,12 @@ const docs = {
         type: 'webdriverio', 
         content: `\nawait I.amOnPage('http://www.google.de')` 
       },
+      { 
+        id: '4',
+        state: 'initial',
+        type: 'webdriverio', 
+        content: `\nawait I.fillField('q', 'puppeteer')\nawait I.pressKey('Enter')\nawait I.waitForNavigation()` 
+      },
     ]
   },
 

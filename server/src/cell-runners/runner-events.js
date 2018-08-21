@@ -10,14 +10,13 @@ const fireExecutionStartedEvt = (events, cell) => {
       })
 }
 
-const fireExecutionSuccessfulEvt = (events, cell, result, screenshot, screenshotUrl, url) => {
+const fireExecutionSuccessfulEvt = (events, cell, result, screenshot, url) => {
     events.emit('message', {
         type: 'execution.successful',
         cell: Object.assign({}, cell, {
           state: 'execution-successful',
           executedAt: Date.now(),
           screenshot,
-          screenshotUrl,
           result,
           url,
           error: undefined
@@ -25,14 +24,13 @@ const fireExecutionSuccessfulEvt = (events, cell, result, screenshot, screenshot
       })
 }
 
-const fireExecutionFailedEvt = (events, cell, err, screenshot, screenshotUrl) => {
+const fireExecutionFailedEvt = (events, cell, err, screenshot) => {
     events.emit('message', {
         type: 'execution.failed',
         cell: Object.assign({}, cell, {
           state: 'execution-failed',
           executedAt: Date.now(),
           screenshot,
-          screenshotUrl,
           error: {
             message: err.toString(),
             actual: err.actual,
@@ -45,7 +43,7 @@ const fireExecutionFailedEvt = (events, cell, err, screenshot, screenshotUrl) =>
 module.exports = events => {
     return {
         fireExecutionStartedEvt: cell => fireExecutionStartedEvt(events, cell),
-        fireExecutionSuccessfulEvt: (cell, result, screenshot) => fireExecutionSuccessfulEvt(events, cell, result, screenshot),
-        fireExecutionFailedEvt: (cell, err, screenshot) => fireExecutionFailedEvt(events, cell, err, screenshot)
+        fireExecutionSuccessfulEvt: (cell, result, screenshot, screenshotUrl, url) => fireExecutionSuccessfulEvt(events, cell, result, screenshot, screenshotUrl, url),
+        fireExecutionFailedEvt: (cell, err, screenshot, screenshotUrl) => fireExecutionFailedEvt(events, cell, err, screenshot, screenshotUrl)
     }
 }

@@ -20,7 +20,6 @@ export default class IndexPage extends React.Component {
 
   static async getInitialProps({query: {docname}}) {
     // TODO Let the user select the document (or make it configurable via url parameter)
-    console.log(docname)
     const document = await getDocument(docname || 'WebdriverIO')
     return { document }
   }
@@ -55,12 +54,12 @@ export default class IndexPage extends React.Component {
   updateScreenshot = (screenshot) => {
     if (!screenshot) return
     
-    if (typeof screenshot === 'string') {
+    if (typeof screenshot.screenshot === 'string') {
       const img = document.querySelector( "#screenshot" );
       img.src = `data:image/png;base64,${screenshot}`;
 
     } else {
-      const arrayBufferView = new Uint8Array(screenshot);
+      const arrayBufferView = new Uint8Array(screenshot.screenshot);
       const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
       const urlCreator = window.URL || window.webkitURL;
       const imageUrl = urlCreator.createObjectURL( blob );
@@ -101,11 +100,13 @@ export default class IndexPage extends React.Component {
   }
 
   handleScreenshotMouseMove = e => {
+    const screenshot = this.state.selectedCell.screenshot
+    if (!screenshot) return
+
     const screenshotEl = document.getElementById('screenshot')
     const rect = screenshotEl.getBoundingClientRect()
-    const point = { x: e.pageX - rect.left, y: e.pageY - rect.top }
-    
-    // TODO Need to scale the point using the screenshot image size
+    const scaleFactor = screenshot.size.width / rect.width
+    const point = { x: (e.pageX - rect.left) * scaleFactor, y: (e.pageY - rect.top) * scaleFactor }
 
     getElementByPoint(point)
   }
@@ -135,7 +136,12 @@ export default class IndexPage extends React.Component {
           </div>
 
           <div className="browser">
-            <a className="browser-bar is-size-7">{this.state.selectedCell && this.state.selectedCell.screenshotUrl}</a>
+            <a className="browser-bar is-size-7">
+              {
+                this.state.selectedCell && this.state.selectedCell.screenshot && this.state.selectedCell.screenshot.url
+              
+              }
+            </a>
             <div className="browser-screenshot">
               <img 
                 id="screenshot"  
@@ -198,8 +204,8 @@ export default class IndexPage extends React.Component {
 
       #screenshot {
         display: block;
-        // max-width: 100%;
-        max-height: 90vh;
+        max-width: 100%;
+        // max-height: 90vh;
         // margin: auto;
       }
 

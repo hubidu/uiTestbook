@@ -1,4 +1,4 @@
-const elementFromPoint = async (events, ctx, point) => {
+const elementFromPoint = async (events, {ctx}, point) => {
   const { I } = ctx
 
   console.log('Getting element under', point)
@@ -12,6 +12,11 @@ const elementFromPoint = async (events, ctx, point) => {
       text: elem.innerText || elem.textContent,
     }
   }, point)
+
+  if (!element) {
+    console.log('WARNING No element under point', point)
+    return
+  }
 
   element.bounds = JSON.parse(element.bounds)
 
