@@ -23,6 +23,7 @@ const _createContext = () => {
         script: ScriptTimeout,
         desiredCapabilities: {
           newCommandTimeout: 0, // dont let appium kill the session if not commands are sent
+          nativeWebScreenshot: true, // otherwise there will be no screenshots in webviews
           fullReset: false, // no full reset
           platformName: "Android",
           platformVersion: "8.1",
@@ -99,12 +100,11 @@ const run = async (ctx, scriptContext, events, cell) => {
     
       const result = await evalCell(scriptContext, cell)
 
-      //   const screenshot = await _saveTakeScreenshot(ctx)
-      const screenshot = undefined
+      const screenshot = await _saveTakeScreenshot(ctx)
+
       eventInstance.fireExecutionSuccessfulEvt(cell, result, screenshot)
     } catch (err) {
-        // const screenshot = await _saveTakeScreenshot(ctx)
-        const screenshot = undefined
+        const screenshot = await _saveTakeScreenshot(ctx)
 
         eventInstance.fireExecutionFailedEvt(cell, err, screenshot)
   

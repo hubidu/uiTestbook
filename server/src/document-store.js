@@ -78,7 +78,13 @@ const docs = {
         id: '6',
         state: 'initial',
         type: 'webdriverio', 
-        content: `await I.context('WEBVIEW_de.check24.check24.beta')`
+        content: `await I.context('WEBVIEW_de.check24.check24.beta')\nawait I.frame('DetailiFrame')`
+      },
+      { 
+        id: '7',
+        state: 'initial',
+        type: 'webdriverio', 
+        content: `await I.click('=vergleichen und wechseln')`
       },
     ]
   },

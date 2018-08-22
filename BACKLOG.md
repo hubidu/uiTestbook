@@ -21,6 +21,7 @@
 
 # Doing
 
+- Fix webdriverio screenshots
 
 # Backlog
 
