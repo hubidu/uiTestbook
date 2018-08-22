@@ -6,6 +6,22 @@ import DocumentEditor from '../components/document-editor'
 import getDocument from '../services/get-document'
 import getElementByPoint from '../services/get-element-by-point'
 
+
+const createImageUrl = (screenshot) => {
+  if (!screenshot) return
+  
+  if (typeof screenshot.screenshot === 'string') {
+    return `data:image/png;base64,${screenshot.screenshot}`;
+  } else {
+    const arrayBufferView = new Uint8Array(screenshot.screenshot);
+    const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+    const urlCreator = window.URL || window.webkitURL;
+    const imageUrl = urlCreator.createObjectURL( blob );
+    return imageUrl;
+  }
+}
+
+
 export default class IndexPage extends React.Component {
   constructor(props) {
     super(props)
@@ -51,22 +67,6 @@ export default class IndexPage extends React.Component {
     this.props.socket.off('message', this.handleMessage)
   }
 
-  updateScreenshot = (screenshot) => {
-    if (!screenshot) return
-    
-    if (typeof screenshot.screenshot === 'string') {
-      const img = document.querySelector( "#screenshot" );
-      img.src = `data:image/png;base64,${screenshot.screenshot}`;
-    } else {
-      const arrayBufferView = new Uint8Array(screenshot.screenshot);
-      const blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
-      const urlCreator = window.URL || window.webkitURL;
-      const imageUrl = urlCreator.createObjectURL( blob );
-      const img = document.querySelector( "#screenshot" );
-      img.src = imageUrl;
-    }
-  }
-
   updateCell = (cell) => {
     const document = this.state.document
     const idx = document.cells.findIndex(c => c.id === cell.id)
@@ -75,13 +75,15 @@ export default class IndexPage extends React.Component {
       document
     })
 
-    this.updateScreenshot(cell.screenshot)
+    this.setState({
+      selectedCell: cell,
+      highlightedElement: undefined
+    })
   }
 
   handleDeviceMessage = (message) => {
     if (message.element) {
       this.setState({highlightedElement: message.element})
-      console.log(message.element)
     }
   }
 
@@ -92,9 +94,9 @@ export default class IndexPage extends React.Component {
   }
 
   handleCellSelectionChange = selectedCell => {
-    this.updateScreenshot(selectedCell.screenshot)
     this.setState({
-      selectedCell
+      selectedCell,
+      highlightedElement: undefined
     })
   }
 
@@ -105,9 +107,13 @@ export default class IndexPage extends React.Component {
     const screenshotEl = document.getElementById('screenshot')
     const rect = screenshotEl.getBoundingClientRect()
     const scaleFactor = screenshot.size.width / rect.width
-    const point = { x: (e.pageX - rect.left) * scaleFactor, y: (e.pageY - rect.top) * scaleFactor }
+    const x = Math.round((e.pageX - rect.left))
+    const y = Math.round((e.pageY - rect.top))
 
-    getElementByPoint(point)
+    const point = { x, y }
+
+    console.log(x, y, scaleFactor)
+    getElementByPoint(point, scaleFactor)
   }
 
   render () {
@@ -142,17 +148,22 @@ export default class IndexPage extends React.Component {
               }
             </a>
             <div className="browser-screenshot">
+              {
+              this.state.selectedCell && this.state.selectedCell.screenshot &&
               <img 
                 id="screenshot"  
+                src={createImageUrl(this.state.selectedCell.screenshot)}
                 onMouseMove={e => this.handleScreenshotMouseMove(e)} 
               />
+              }
               {
                 this.state.highlightedElement &&
                 <div style={{
                   position: 'absolute', 
                   pointerEvents: 'none',
                   zIndex: 1000, 
-                  border: '1px solid red', 
+                  backgroundColor: 'yellow',
+                  opacity: 0.2,
                   top: this.state.highlightedElement.bounds.top, 
                   left: this.state.highlightedElement.bounds.left,
                   width: this.state.highlightedElement.bounds.width,

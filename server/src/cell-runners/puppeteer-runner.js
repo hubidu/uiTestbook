@@ -32,6 +32,15 @@ const _takeScreenshot = async I => {
   }
 }
 
+const close = async () => {
+  if (!ctx) return
+  if (!ctx.I) return
+
+  await ctx.I._stopBrowser()
+  ctx = undefined
+  scriptContext = undefined
+}
+
 const before = async (ctx) => {
     await ctx.I._beforeSuite()
     await ctx.I._before()  
@@ -54,7 +63,7 @@ const createContext = () => {
     const driver = new Puppeteer({
       show: true,
       waitForTimeout: 10000,
-      getPageTimeout: 10000,
+      getPageTimeout: 30000,
       waitForAction: 0,
       restart: false,
       keepCookies: true,
@@ -86,7 +95,7 @@ const run = async (ctx, scriptContext, events, cell) => {
         await ctx.I.amOnPage(cell.url)
       }
       const beforeUrl = await ctx.I.grabCurrentUrl()
-  
+
       const result = await evalCell(scriptContext, cell)
   
       const ss = await _takeScreenshot(ctx.I)
@@ -94,6 +103,7 @@ const run = async (ctx, scriptContext, events, cell) => {
       eventInstance.fireExecutionSuccessfulEvt(cell, result, ss, beforeUrl)
 
     } catch (err) {
+      console.log('ERROR during cell execution', err)
       const ss = await _takeScreenshot(ctx.I)
 
       eventInstance.fireExecutionFailedEvt(cell, err, ss)
@@ -106,5 +116,6 @@ module.exports = {
     getContexts,
     before,
     after,
-    run
+    run,
+    close,
 }

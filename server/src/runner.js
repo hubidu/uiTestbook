@@ -2,11 +2,10 @@ const assert = require('assert')
 
 const {getRunnerForCellType} = require('./cell-runners')
 
-const getCurrentContext = () => ctx
-
 const sessions = {}
 
 const closeSession = async sessionId => {
+  assert(sessionId, 'Expected a sessionId')
   if (!sessions[sessionId]) return
 
   const runner = sessions[sessionId];

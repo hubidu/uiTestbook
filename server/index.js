@@ -45,7 +45,7 @@ server.post('/api/documents/:docName/run-all', jsonParser, async (req, res) => {
   if (!document) return res.status(404).json({message: 'document not found'})
 
   const cells = req.body
-  await runner.closeSession()
+  await runner.closeSession(FakeSessionId)
   runner.run(FakeSessionId, events, document, cells)
 
   res.json({
