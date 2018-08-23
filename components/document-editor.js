@@ -53,7 +53,9 @@ export default class StepEditor extends React.Component {
     const document = resetCells(this.state.document)
     this.setState({document})
 
-    runAllCells(document.name, document.cells.slice(0, this.state.selectedCell))
+    const idx = document.cells.findIndex(cell => cell.id === this.state.selectedCell)
+
+    runAllCells(document.name, document.cells.slice(0, idx + 1))
   }
 
   runSelectedCells = async () => {
@@ -266,10 +268,10 @@ export default class StepEditor extends React.Component {
           <button className="button is-small" onClick={e => this.handleRunToSelectedClick()}>
             Run to Selected
           </button>
-          <button className="button is-small is-primary" onClick={e => this.handleAddCellClick()}>
+          <button className="button is-small" onClick={e => this.handleAddCellClick()}>
             Add Cell
           </button>
-          <button className="button is-small is-danger" onClick={e => this.handleDeleteCellClick()}>
+          <button className="button is-small" onClick={e => this.handleDeleteCellClick()}>
             Delete Cell
           </button>
         </div>
@@ -282,8 +284,12 @@ export default class StepEditor extends React.Component {
       }    
       
       <style jsx>{`
+        .DocumentEditor {
+          margin-left: 5px;
+        }
         .DocumentEditor-actions button {
           margin-left: 0.25em;
+          margin-bottom: 1em;
         }
       `}</style>
     </div>

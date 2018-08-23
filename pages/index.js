@@ -21,7 +21,6 @@ const createImageUrl = (screenshot) => {
   }
 }
 
-
 export default class IndexPage extends React.Component {
   constructor(props) {
     super(props)
@@ -112,157 +111,174 @@ export default class IndexPage extends React.Component {
 
     const point = { x, y }
 
-    console.log(x, y, scaleFactor)
     getElementByPoint(point, scaleFactor)
   }
 
   render () {
     return (
-      <div className="wrapper container is-fluid">
-        <Head>
-          <title>uiTestbook</title>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <div className="wrapper container-fluid">
+      <Head>
+        <title>uiTestbook</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 
-          <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css' />
-          <link href="/static/prism.css" rel="stylesheet" />
-        </Head>
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css' />
+        <link href="/static/prism.css" rel="stylesheet" />
+      </Head>
 
-        <header>
-          ui
-          <strong>Testbook</strong>
-        </header>
-        
-        <div className="content">
-          <div className="code">
-            <DocumentEditor
-              document={this.props.document} 
-              onCellSelectionChange={this.handleCellSelectionChange} />
-          </div>
+      <header>
+        <strong>ui</strong>
+        Testbook
+      </header>
 
-          <div className="browser">
-            <a className="browser-bar is-size-7">
-              {
-                this.state.selectedCell && this.state.selectedCell.screenshot && this.state.selectedCell.screenshot.url
-              
-              }
-            </a>
-            <div className="browser-screenshot">
-              {
-              this.state.selectedCell && this.state.selectedCell.screenshot &&
-              <img 
-                id="screenshot"  
-                src={createImageUrl(this.state.selectedCell.screenshot)}
-                onMouseMove={e => this.handleScreenshotMouseMove(e)} 
-              />
-              }
-              {
-                this.state.highlightedElement &&
-                <div style={{
-                  position: 'absolute', 
-                  pointerEvents: 'none',
-                  zIndex: 1000, 
-                  backgroundColor: 'yellow',
-                  opacity: 0.2,
-                  top: this.state.highlightedElement.bounds.top, 
-                  left: this.state.highlightedElement.bounds.left,
-                  width: this.state.highlightedElement.bounds.width,
-                  height: this.state.highlightedElement.bounds.height
-                }}>
+      <div className="content columns is-1">
+        <div className="content-pane column is-4">
+          <DocumentEditor
+          document={this.props.document} 
+          onCellSelectionChange={this.handleCellSelectionChange} />
+        </div>
+        <div id="browser-container" className="content-pane column is-6">
+          <a className="browser-bar is-size-7">
+          {
+            this.state.selectedCell && this.state.selectedCell.screenshot && this.state.selectedCell.screenshot.url
+          
+          }
+          </a>
+          <div className="browser-screenshot">
+            {
+            this.state.selectedCell && this.state.selectedCell.screenshot &&
+            <img 
+              id="screenshot"  
+              src={createImageUrl(this.state.selectedCell.screenshot)}
+              onMouseMove={e => this.handleScreenshotMouseMove(e)} 
+            />
+            }
+            {
+              this.state.highlightedElement &&
+              <div style={{
+                position: 'absolute', 
+                pointerEvents: 'none',
+                zIndex: 1000, 
+                backgroundColor: 'yellow',
+                opacity: 0.2,
+                top: this.state.highlightedElement.bounds.top, 
+                left: this.state.highlightedElement.bounds.left,
+                width: this.state.highlightedElement.bounds.width,
+                height: this.state.highlightedElement.bounds.height
+              }}>
 
-                </div>
-              }
-            </div>
+              </div>
+            }
           </div>
         </div>
+        <div className="content-pane column is-2">
+          {
+            this.state.highlightedElement &&
+            <div>
+              <table className="table is-narrow is-hoverable is-size-7">
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>x</strong>
+                    </td>
+                    <td>
+                      {this.state.highlightedElement.bounds.left}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>y</strong>
+                    </td>
+                    <td>
+                      {this.state.highlightedElement.bounds.top}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>width</strong>
+                    </td>
+                    <td>
+                      {this.state.highlightedElement.bounds.width}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>height</strong>
+                    </td>
+                    <td>
+                      {this.state.highlightedElement.bounds.height}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>attributes</strong>
+                    </td>
+                    <td>
+                      {
+                        this.state.highlightedElement.attributes.map((nameAndValue, i) => 
+                          <div key={i}>
+                            <strong>{nameAndValue[0]}</strong>
+                            =
+                            <span>{nameAndValue[1]}</span>
+                          </div>
+                        )
+                      
+                      }
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p className="is-size-7">
+                {this.state.highlightedElement.text}
+              </p>
+            </div>
+          }
+        </div>
+     </div>
 
-      <style jsx global>{`
-      .hl-key {
-        color: hsl(204, 86%, 53%);
-      }
-      .hl-string {
-        color: hsl(141, 71%, 48%);
-      }
-      .hl-number {
-        color: hsl(141, 71%, 48%);
-
-      }
-      .hl-boolean {
-        color: hsl(141, 71%, 48%);
-      }
-
-      html,
-      body,
-      #__next,
-      .wrapper {
+    <style jsx global>{`
+    html,
+    body,
+    #__next,
+    .wrapper {
         height: 100%;
         padding: 0;
         margin: 0;
-      }
+    }
 
-      body {
-        overflow:hidden;
-      }
+    .content {
+      height: 100%;
+    }
 
-      header {
-        padding: 10px;
-        position: absolute;
-        background: white;
-        height: 30px;
-        width: 100%;
-      }
+    .content-pane {
+      padding-top: 50px !important;
+      height: 100%;
+      overflow-y: scroll;
+    }
 
-      #screenshot {
-        display: block;
-        // max-width: 100%;
-        // max-height: 90vh;
-        // margin: auto;
-      }
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 3px 5px;
+      background: white;
+      height: 40px;
+      width: 100%;
+    }
 
-      .content {
-        height: 100%;
-        display: -ms-flexbox;
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-box;
-        display: box;
+    #screenshot {
+      display: block;
+    }
 
-        -ms-flex-direction: row;
-        -webkit-box-orient: horizontal;
-        -moz-box-orient: horizontal;
-        -ms-box-orient: horizontal;
-        box-orient: horizontal;
-      }
+    #browser-container {
+      background-color: #eee;
+    }
 
-      .code {
-        width: 40%;
-        -ms-flex: 0 100px;
-        -webkit-box-flex:  0;
-        -moz-box-flex:  0;
-       -ms-box-flex:  0;
-        box-flex:  0;
-        padding: 5px;
-        margin-top: 50px;
-        overflow-y: scroll;
-      }
+    .browser-screenshot {
+      position: relative;
+    }
 
-      .browser {
-        padding: 5px;
-        margin-top: 50px;
-        background: #fafafa;
-       -ms-flex: 1;
-       -webkit-box-flex: 1;
-       -moz-box-flex: 1;
-       -ms-box-flex: 1;
-        box-flex: 1;
-        overflow-y: scroll;
-      }
-
-      .browser-screenshot {
-        position: relative;
-      }
-
-      `}</style>
+    `}</style>
     </div>
     )
   }

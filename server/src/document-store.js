@@ -1,6 +1,100 @@
 const assert = require('assert')
 
 const docs = {
+  'SearchJobs': {
+    name: 'SearchJobs',
+    meta: {
+      title: 'Bewerbung auf eine Softwareentwicklerposition bei CHECK24',
+      type: 'puppeteer',
+    },
+    cells: [
+      { 
+        id: '0',
+        state: 'initial',
+        type: 'markdown', 
+        content: `#### Bewerbung auf eine Softwareentwicklerposition bei CHECK24` 
+      },
+      { 
+        id: '1',
+        state: 'initial',
+        type: 'markdown', 
+        content: `  - Gehe zum Job Portal` 
+      },
+      { 
+        id: '2',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.amOnPage('https://jobs.check24.de/')\n// Get the page title\nreturn await I.` 
+      },
+      { 
+        id: '3',
+        state: 'initial',
+        type: 'markdown', 
+        content: `  - Suche nach "react" jobs` 
+      },
+      { 
+        id: '4',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.fillField('body #search', 'react docker')\nawait I.click('Job finden', '.btn.btn-m.primary.block')\nawait I.waitInUrl('/search')` 
+      },
+      { 
+        id: '5',
+        state: 'initial',
+        type: 'markdown', 
+        content: `  - Überprüfe die gefundenen Anzeigen` 
+      },
+      { 
+        id: '6',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.seeElementInDOM('.filter--section')\nawait I.see('3 offene Stellen an 1 Standort', '.text-muted')\nawait I.seeNumberOfVisibleElements('.vacancy--box', 4)` 
+      },
+      { 
+        id: '7',
+        state: 'initial',
+        type: 'markdown', 
+        content: `  - Wechsle zu den Details einer Anzeige` 
+      },
+      { 
+        id: '8',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `// Return title of adds\nreturn await I.grabTextFrom('.vacancy--box')` 
+      },
+      { 
+        id: '9',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.click('Werkstudent')\nawait I.waitForNavigation()` 
+      },
+      { 
+        id: '10',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.see('selenium')\nawait I.see('docker')` 
+      },
+      { 
+        id: '11',
+        state: 'initial',
+        type: 'markdown', 
+        content: `  - Starte den Bewerbungsprozess` 
+      },
+      { 
+        id: '12',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.click('Bewerben')\nawait I.waitForNavigation()` 
+      },
+      { 
+        id: '13',
+        state: 'initial',
+        type: 'puppeteer', 
+        content: `await I.see()` 
+      },
+    ]
+  },
+
   'Puppeteer': {
     name: 'Puppeteer',
     meta: {
@@ -23,13 +117,13 @@ const docs = {
       { 
         id: '3',
         state: 'initial',
-        type: 'webdriverio', 
+        type: 'puppeteer', 
         content: `\nawait I.amOnPage('http://www.google.de')` 
       },
       { 
         id: '4',
         state: 'initial',
-        type: 'webdriverio', 
+        type: 'puppeteer', 
         content: `\nawait I.fillField('q', 'puppeteer')\nawait I.pressKey('Enter')\nawait I.waitForNavigation()` 
       },
     ]

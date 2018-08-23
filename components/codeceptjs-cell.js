@@ -62,7 +62,7 @@ export default class CodeceptjsCell extends React.Component {
               ref="cellEditor"
               autoFocus="true"
               className="CodeceptjsCell-editor" 
-              rows={5} 
+              rows={3} 
               value={this.props.cell.content} 
               placeholder="Write codeceptjs code here"
               onChange={e => this.handleCellContentChange(e.target.value)} />
